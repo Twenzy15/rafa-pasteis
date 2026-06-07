@@ -1,0 +1,882 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pedidos da Pastelaria</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --panel: #181818;
+      --panel-soft: #222;
+      --line: #343434;
+      --text: #f7f1e8;
+      --muted: #b9afa3;
+      --orange: #ff8a1f;
+      --orange-dark: #d86500;
+      --danger: #e44747;
+      --ok: #2fd189;
+      --shadow: 0 18px 60px rgba(0, 0, 0, .32);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 138, 31, .16), transparent 34rem),
+        linear-gradient(135deg, #0b0b0b 0%, #141414 58%, #241407 100%);
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(1440px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 18px;
+      border: 1px solid rgba(255, 138, 31, .28);
+      border-radius: var(--radius);
+      background: rgba(15, 15, 15, .82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border-radius: var(--radius);
+      color: #111;
+      background: linear-gradient(135deg, #ffb15d, var(--orange));
+      box-shadow: 0 8px 26px rgba(255, 138, 31, .32);
+      flex: 0 0 auto;
+    }
+
+    .brand-mark svg {
+      width: 30px;
+      height: 30px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(1.25rem, 2vw, 1.85rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .day-total {
+      min-width: 184px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: var(--orange);
+      color: #111;
+      text-align: right;
+      font-weight: 800;
+    }
+
+    .day-total span {
+      display: block;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      opacity: .78;
+    }
+
+    .day-total strong {
+      display: block;
+      margin-top: 2px;
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr);
+      gap: 18px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(24, 24, 24, .94);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 138, 31, .45);
+      border-radius: 999px;
+      color: var(--orange);
+      font-size: .82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .menu {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .category {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #141414;
+    }
+
+    .category-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 12px;
+      background: #202020;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .category-title h3 {
+      color: var(--orange);
+      font-size: .88rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .category-title span {
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .item:first-of-type {
+      border-top: 0;
+    }
+
+    .item-name {
+      display: block;
+      font-weight: 750;
+      line-height: 1.2;
+    }
+
+    .item-price {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .qty {
+      display: grid;
+      grid-template-columns: 38px 46px 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #101010;
+    }
+
+    .qty button {
+      color: var(--text);
+      background: var(--panel-soft);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .qty button:active {
+      background: var(--orange-dark);
+    }
+
+    .qty input {
+      width: 100%;
+      border: 0;
+      color: var(--text);
+      background: #0f0f0f;
+      text-align: center;
+      font-weight: 800;
+      appearance: textfield;
+    }
+
+    .qty input::-webkit-outer-spin-button,
+    .qty input::-webkit-inner-spin-button {
+      margin: 0;
+      appearance: none;
+    }
+
+    .add-one {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: var(--radius);
+      color: #111;
+      background: var(--orange);
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .order-box {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    textarea {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 11px 12px;
+      color: var(--text);
+      background: #101010;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    textarea:focus,
+    .qty:focus-within {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255, 138, 31, .13);
+    }
+
+    .current-list {
+      display: grid;
+      gap: 8px;
+      min-height: 88px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #101010;
+    }
+
+    .empty {
+      align-self: center;
+      color: var(--muted);
+      text-align: center;
+      font-size: .92rem;
+    }
+
+    .line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .line:last-child {
+      border-bottom: 0;
+    }
+
+    .line strong {
+      display: block;
+      font-size: .95rem;
+    }
+
+    .line span {
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .line-price {
+      color: var(--orange);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .total-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 0 2px;
+      border-top: 1px solid var(--line);
+      font-weight: 850;
+    }
+
+    .total-row strong {
+      color: var(--orange);
+      font-size: 1.45rem;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .btn {
+      min-height: 46px;
+      border-radius: var(--radius);
+      padding: 0 14px;
+      color: var(--text);
+      background: var(--panel-soft);
+      font-weight: 850;
+    }
+
+    .btn-primary {
+      color: #111;
+      background: var(--orange);
+    }
+
+    .btn-danger {
+      color: #fff;
+      background: #531c1c;
+      border: 1px solid rgba(228, 71, 71, .45);
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
+    .orders {
+      display: grid;
+      gap: 10px;
+      max-height: 560px;
+      overflow: auto;
+      padding: 16px;
+    }
+
+    .saved-order {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+      overflow: hidden;
+    }
+
+    .saved-order summary {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .saved-order summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .order-title {
+      display: block;
+      font-weight: 900;
+    }
+
+    .order-time {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .saved-total {
+      color: var(--orange);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .saved-body {
+      padding: 0 13px 13px;
+    }
+
+    .notes {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: #191919;
+      font-size: .88rem;
+    }
+
+    .day-actions {
+      display: grid;
+      padding: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 10;
+      max-width: min(360px, calc(100vw - 36px));
+      padding: 12px 14px;
+      border: 1px solid rgba(47, 209, 137, .5);
+      border-radius: var(--radius);
+      color: #dfffee;
+      background: #123226;
+      box-shadow: var(--shadow);
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .orders {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        padding: 10px;
+      }
+
+      .topbar {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+
+      .day-total {
+        width: 100%;
+        text-align: left;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+      }
+
+      .panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .item {
+        grid-template-columns: 1fr auto;
+      }
+
+      .add-one {
+        display: none;
+      }
+
+      .qty {
+        grid-column: 2;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 64 64" role="img">
+            <path fill="currentColor" d="M8 38c5-15 18-25 32-25 8 0 14 3 18 8-3 17-16 28-32 28-8 0-16-3-18-11Zm11-1c3 6 9 10 17 10 10 0 19-7 23-18-4-4-9-7-15-7-12 0-23 7-25 15Z"/>
+            <path fill="currentColor" d="M22 33h7v5h-7zm11-8h7v5h-7zm8 12h7v5h-7z"/>
+          </svg>
+        </div>
+        <div>
+          <h1>Pedidos da Pastelaria</h1>
+          <p class="subtitle">Anote pedidos, acompanhe quantidades e feche o total do dia.</p>
+        </div>
+      </div>
+      <div class="day-total">
+        <span>Total do dia</span>
+        <strong id="dayTotal">R$ 0,00</strong>
+      </div>
+    </header>
+
+    <section class="layout">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>Cardápio</h2>
+          <span class="chip" id="itemCount">0 itens no pedido</span>
+        </div>
+        <div class="menu" id="menu"></div>
+      </div>
+
+      <aside class="side">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Pedido atual</h2>
+            <span class="chip" id="nextOrder">Pedido #1</span>
+          </div>
+          <div class="order-box">
+            <div class="field">
+              <label for="customer">Cliente</label>
+              <input id="customer" type="text" placeholder="Nome ou mesa">
+            </div>
+            <div class="field">
+              <label for="notes">Observações</label>
+              <textarea id="notes" placeholder="Ex.: sem cebola, retirar agora, entregar na mesa 3"></textarea>
+            </div>
+            <div class="current-list" id="currentList">
+              <p class="empty">Escolha os itens no cardápio.</p>
+            </div>
+            <div class="total-row">
+              <span>Total do pedido</span>
+              <strong id="currentTotal">R$ 0,00</strong>
+            </div>
+            <div class="actions">
+              <button class="btn" id="clearCurrent" type="button">Limpar pedido</button>
+              <button class="btn btn-primary" id="saveOrder" type="button" disabled>Salvar pedido</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel" style="margin-top:18px">
+          <div class="panel-head">
+            <h2>Pedidos</h2>
+            <span class="chip" id="ordersCount">0 salvos</span>
+          </div>
+          <div class="orders" id="ordersList">
+            <p class="empty">Nenhum pedido salvo hoje.</p>
+          </div>
+          <div class="day-actions">
+            <button class="btn btn-danger" id="clearDay" type="button">Limpar pedidos e começar novo dia</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const MENU = [
+      {
+        category: "Tradicionais",
+        items: [
+          { id: "queijo", name: "Queijo", price: 6 },
+          { id: "misto", name: "Misto", price: 6 },
+          { id: "frango", name: "Frango", price: 6 },
+          { id: "carne", name: "Carne", price: 6 }
+        ]
+      },
+      {
+        category: "Especiais",
+        items: [
+          { id: "frango-queijo", name: "Frango c/ queijo", price: 7 },
+          { id: "carne-queijo", name: "Carne c/ queijo", price: 7 },
+          { id: "x-tudo", name: "X-Tudo", price: 7 },
+          { id: "chocolate-queijo", name: "Chocolate c/ queijo", price: 6 }
+        ]
+      },
+      {
+        category: "Bebidas",
+        items: [
+          { id: "coca-lata", name: "Coca lata", price: 5 },
+          { id: "guarana-lata", name: "Guaraná lata", price: 5 },
+          { id: "suco-copo", name: "Suco copo", price: 2 },
+          { id: "agua", name: "Água", price: 2 }
+        ]
+      }
+    ];
+
+    const STORAGE_KEY = "pastelaria.pedidos";
+    const $ = (selector) => document.querySelector(selector);
+    const allItems = MENU.flatMap((group) => group.items);
+    const itemById = Object.fromEntries(allItems.map((item) => [item.id, item]));
+    const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+    let current = {};
+    let orders = loadOrders();
+    let toastTimer = null;
+
+    function loadOrders() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return Array.isArray(saved) ? saved : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function persistOrders() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+    }
+
+    function money(value) {
+      return currency.format(value);
+    }
+
+    function getCurrentLines() {
+      return Object.entries(current)
+        .filter(([, qty]) => qty > 0)
+        .map(([id, qty]) => {
+          const item = itemById[id];
+          return { ...item, qty, subtotal: item.price * qty };
+        });
+    }
+
+    function getCurrentTotal() {
+      return getCurrentLines().reduce((sum, item) => sum + item.subtotal, 0);
+    }
+
+    function getDayTotal() {
+      return orders.reduce((sum, order) => sum + order.total, 0);
+    }
+
+    function nextOrderNumber() {
+      return orders.length + 1;
+    }
+
+    function renderMenu() {
+      $("#menu").innerHTML = MENU.map((group) => `
+        <section class="category">
+          <div class="category-title">
+            <h3>${group.category}</h3>
+            <span>${group.items.length} opções</span>
+          </div>
+          ${group.items.map((item) => `
+            <article class="item">
+              <div>
+                <span class="item-name">${item.name}</span>
+                <p class="item-price">${money(item.price)}</p>
+              </div>
+              <div class="qty" aria-label="Quantidade de ${item.name}">
+                <button type="button" data-action="decrease" data-id="${item.id}" aria-label="Diminuir ${item.name}">-</button>
+                <input type="number" min="0" inputmode="numeric" value="${current[item.id] || 0}" data-id="${item.id}" aria-label="Quantidade ${item.name}">
+                <button type="button" data-action="increase" data-id="${item.id}" aria-label="Aumentar ${item.name}">+</button>
+              </div>
+              <button class="add-one" type="button" data-action="increase" data-id="${item.id}" aria-label="Adicionar ${item.name}">+</button>
+            </article>
+          `).join("")}
+        </section>
+      `).join("");
+    }
+
+    function renderCurrent() {
+      const lines = getCurrentLines();
+      $("#currentList").innerHTML = lines.length
+        ? lines.map((item) => `
+          <div class="line">
+            <div>
+              <strong>${item.qty}x ${item.name}</strong>
+              <span>${money(item.price)} cada</span>
+            </div>
+            <div class="line-price">${money(item.subtotal)}</div>
+          </div>
+        `).join("")
+        : `<p class="empty">Escolha os itens no cardápio.</p>`;
+
+      $("#currentTotal").textContent = money(getCurrentTotal());
+      $("#itemCount").textContent = `${lines.reduce((sum, item) => sum + item.qty, 0)} itens no pedido`;
+      $("#saveOrder").disabled = lines.length === 0;
+
+      document.querySelectorAll(".qty input").forEach((input) => {
+        input.value = current[input.dataset.id] || 0;
+      });
+    }
+
+    function renderOrders() {
+      $("#nextOrder").textContent = `Pedido #${nextOrderNumber()}`;
+      $("#dayTotal").textContent = money(getDayTotal());
+      $("#ordersCount").textContent = `${orders.length} salvos`;
+
+      $("#ordersList").innerHTML = orders.length
+        ? orders.slice().reverse().map((order) => `
+          <details class="saved-order" open>
+            <summary>
+              <span>
+                <span class="order-title">Pedido #${order.number}${order.customer ? ` - ${order.customer}` : ""}</span>
+                <span class="order-time">${order.createdAt}</span>
+              </span>
+              <span class="saved-total">${money(order.total)}</span>
+            </summary>
+            <div class="saved-body">
+              ${order.items.map((item) => `
+                <div class="line">
+                  <div>
+                    <strong>${item.qty}x ${item.name}</strong>
+                    <span>${money(item.price)} cada</span>
+                  </div>
+                  <div class="line-price">${money(item.subtotal)}</div>
+                </div>
+              `).join("")}
+              ${order.notes ? `<p class="notes">${order.notes}</p>` : ""}
+            </div>
+          </details>
+        `).join("")
+        : `<p class="empty">Nenhum pedido salvo hoje.</p>`;
+    }
+
+    function renderAll() {
+      renderMenu();
+      renderCurrent();
+      renderOrders();
+    }
+
+    function setQuantity(id, qty) {
+      const next = Math.max(0, Number.isFinite(qty) ? Math.floor(qty) : 0);
+      if (next === 0) {
+        delete current[id];
+      } else {
+        current[id] = next;
+      }
+      renderCurrent();
+    }
+
+    function resetCurrent() {
+      current = {};
+      $("#customer").value = "";
+      $("#notes").value = "";
+      renderAll();
+    }
+
+    function showToast(message) {
+      const toast = $("#toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    $("#menu").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button) return;
+      const id = button.dataset.id;
+      const delta = button.dataset.action === "increase" ? 1 : -1;
+      setQuantity(id, (current[id] || 0) + delta);
+    });
+
+    $("#menu").addEventListener("input", (event) => {
+      if (!event.target.matches(".qty input")) return;
+      setQuantity(event.target.dataset.id, Number(event.target.value));
+    });
+
+    $("#clearCurrent").addEventListener("click", () => {
+      resetCurrent();
+      showToast("Pedido atual limpo.");
+    });
+
+    $("#saveOrder").addEventListener("click", () => {
+      const items = getCurrentLines();
+      if (!items.length) return;
+
+      const now = new Date();
+      const order = {
+        number: nextOrderNumber(),
+        customer: $("#customer").value.trim(),
+        notes: $("#notes").value.trim(),
+        createdAt: now.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }),
+        items,
+        total: getCurrentTotal()
+      };
+
+      orders.push(order);
+      persistOrders();
+      resetCurrent();
+      showToast(`Pedido #${order.number} salvo.`);
+    });
+
+    $("#clearDay").addEventListener("click", () => {
+      if (!orders.length) {
+        showToast("Não há pedidos para limpar.");
+        return;
+      }
+
+      const ok = confirm("Limpar todos os pedidos salvos e começar um novo dia?");
+      if (!ok) return;
+
+      orders = [];
+      persistOrders();
+      resetCurrent();
+      showToast("Novo dia iniciado.");
+    });
+
+    renderAll();
+  </script>
+</body>
+</html>

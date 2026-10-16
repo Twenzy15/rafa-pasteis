@@ -1,0 +1,4247 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>RAFA LANCHES</title>
+  <style>
+    :root {
+      --bg: #0f0f0f;
+      --panel: #181818;
+      --panel-soft: #222;
+      --line: #343434;
+      --text: #f7f1e8;
+      --muted: #b9afa3;
+      --orange: #ff8a1f;
+      --orange-dark: #d86500;
+      --danger: #e44747;
+      --ok: #2fd189;
+      --shadow: 0 18px 60px rgba(0, 0, 0, .32);
+      --radius: 8px;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      width: 100%;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(255, 138, 31, .16), transparent 34rem),
+        linear-gradient(135deg, #0b0b0b 0%, #141414 58%, #241407 100%);
+      padding-bottom: 86px;
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    .app {
+      width: min(1440px, 100%);
+      min-width: 0;
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .topbar {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 14px;
+      align-items: center;
+      padding: 18px;
+      border: 1px solid rgba(255, 138, 31, .28);
+      border-radius: var(--radius);
+      background: rgba(15, 15, 15, .82);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(12px);
+    }
+
+    .brand {
+      display: flex;
+      gap: 14px;
+      align-items: center;
+      min-width: 0;
+    }
+
+    .top-menu-button {
+      display: grid;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: var(--radius);
+      color: var(--text);
+      background: #24232b;
+      border: 1px solid rgba(255, 255, 255, .08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .24);
+    }
+
+    .top-menu-button svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      stroke-width: 2.3;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 48px;
+      height: 48px;
+      place-items: center;
+      border-radius: var(--radius);
+      color: #111;
+      background: #111;
+      box-shadow: 0 8px 26px rgba(255, 138, 31, .32);
+      flex: 0 0 auto;
+      overflow: hidden;
+    }
+
+    .brand-mark img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(1.25rem, 2vw, 1.85rem);
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      margin-top: 5px;
+      color: var(--muted);
+      font-size: .95rem;
+    }
+
+    .sync-status {
+      display: inline-flex;
+      align-items: center;
+      margin-top: 8px;
+      padding: 6px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .03);
+      font-size: .78rem;
+      font-weight: 750;
+    }
+
+    .sync-status.online {
+      color: #dfffee;
+      border-color: rgba(47, 209, 137, .48);
+      background: rgba(47, 209, 137, .12);
+    }
+
+    .sync-status.error {
+      color: #ffd9d9;
+      border-color: rgba(228, 71, 71, .5);
+      background: rgba(228, 71, 71, .12);
+    }
+
+    .day-total {
+      display: grid;
+      gap: 6px;
+      min-width: 184px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: var(--orange);
+      color: #111;
+      text-align: right;
+      font-weight: 800;
+    }
+
+    .day-total-heading {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .day-total span {
+      display: block;
+      font-size: .78rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      opacity: .78;
+    }
+
+    .day-total-eye {
+      position: relative;
+      display: grid;
+      width: 28px;
+      height: 28px;
+      place-items: center;
+      border-radius: var(--radius);
+      color: #111;
+      background: rgba(17, 17, 17, .13);
+    }
+
+    .day-total-eye svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2.4;
+      fill: none;
+    }
+
+    .day-total-eye.is-hidden::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 2px;
+      border-radius: 999px;
+      background: currentColor;
+      transform: rotate(-38deg);
+    }
+
+    .day-total strong {
+      display: block;
+      font-size: 1.55rem;
+      line-height: 1;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr);
+      gap: 18px;
+      margin-top: 18px;
+      align-items: start;
+    }
+
+    .pages-viewport {
+      width: 100%;
+      min-width: 0;
+      margin-top: 18px;
+      overflow: hidden;
+      touch-action: pan-y;
+      transition: height .2s ease;
+    }
+
+    .pages-track {
+      display: flex;
+      align-items: flex-start;
+      will-change: transform;
+      transition: transform .24s ease;
+    }
+
+    .pages-track.dragging {
+      transition: none;
+    }
+
+    .page {
+      display: block;
+      flex: 0 0 100%;
+      min-width: 0;
+      padding-right: 1px;
+    }
+
+    .page-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(360px, .85fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .single-page {
+      display: grid;
+      gap: 18px;
+      min-width: 0;
+    }
+
+    .main-column {
+      display: grid;
+      gap: 18px;
+    }
+
+    .panel {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(24, 24, 24, .94);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-head h2 {
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .chip {
+      padding: 7px 10px;
+      border: 1px solid rgba(255, 138, 31, .45);
+      border-radius: 999px;
+      color: var(--orange);
+      font-size: .82rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .menu {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .category {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #141414;
+    }
+
+    .category-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 12px;
+      background: #202020;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .category-title h3 {
+      color: var(--orange);
+      font-size: .88rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .category-title span {
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .item:first-of-type {
+      border-top: 0;
+    }
+
+    .item-name {
+      display: block;
+      font-weight: 750;
+      line-height: 1.2;
+    }
+
+    .item-price {
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .item-stock {
+      display: block;
+      margin-top: 4px;
+      color: var(--orange);
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .item-stock.out {
+      color: var(--danger);
+    }
+
+    .item-out-of-stock {
+      opacity: .72;
+    }
+
+    .item-out-of-stock .qty button:disabled,
+    .item-out-of-stock .add-one:disabled {
+      cursor: not-allowed;
+      opacity: .35;
+    }
+
+    .item-out-of-stock .qty input:disabled {
+      cursor: not-allowed;
+      opacity: .5;
+    }
+
+    .qty {
+      display: grid;
+      grid-template-columns: 38px 46px 38px;
+      height: 38px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: #101010;
+    }
+
+    .qty button {
+      color: var(--text);
+      background: var(--panel-soft);
+      font-size: 1.2rem;
+      line-height: 1;
+    }
+
+    .qty button:active {
+      background: var(--orange-dark);
+    }
+
+    .qty input {
+      width: 100%;
+      border: 0;
+      color: var(--text);
+      background: #0f0f0f;
+      text-align: center;
+      font-weight: 800;
+      appearance: textfield;
+    }
+
+    .qty input::-webkit-outer-spin-button,
+    .qty input::-webkit-inner-spin-button {
+      margin: 0;
+      appearance: none;
+    }
+
+    .add-one {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: var(--radius);
+      color: #111;
+      background: var(--orange);
+      font-size: 1.25rem;
+      font-weight: 900;
+    }
+
+    .order-box {
+      display: grid;
+      gap: 14px;
+      padding: 16px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    label {
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    textarea {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    textarea {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 11px 12px;
+      color: var(--text);
+      background: #101010;
+      outline: none;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    input[type="date"]:focus,
+    textarea:focus,
+    .qty:focus-within {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255, 138, 31, .13);
+    }
+
+    .current-list {
+      display: grid;
+      gap: 8px;
+      min-height: 88px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #101010;
+    }
+
+    .empty {
+      align-self: center;
+      color: var(--muted);
+      text-align: center;
+      font-size: .92rem;
+    }
+
+    .line {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+    }
+
+    .line:last-child {
+      border-bottom: 0;
+    }
+
+    .line strong {
+      display: block;
+      font-size: .95rem;
+    }
+
+    .line span {
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .line-price {
+      color: var(--orange);
+      font-weight: 850;
+      white-space: nowrap;
+    }
+
+    .total-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 13px 0 2px;
+      border-top: 1px solid var(--line);
+      font-weight: 850;
+    }
+
+    .total-row strong {
+      color: var(--orange);
+      font-size: 1.45rem;
+    }
+
+    .actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .actions-inline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .btn {
+      min-height: 46px;
+      border-radius: var(--radius);
+      padding: 0 14px;
+      color: var(--text);
+      background: var(--panel-soft);
+      font-weight: 850;
+    }
+
+    .btn-primary {
+      color: #111;
+      background: var(--orange);
+    }
+
+    .btn-danger {
+      color: #fff;
+      background: #531c1c;
+      border: 1px solid rgba(228, 71, 71, .45);
+    }
+
+    .btn-small {
+      min-height: 36px;
+      padding: 0 10px;
+      font-size: .86rem;
+    }
+
+    .btn:disabled {
+      cursor: not-allowed;
+      opacity: .45;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .confirm-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: grid;
+      place-items: center;
+      padding: 18px;
+      background: rgba(0, 0, 0, .72);
+      backdrop-filter: blur(4px);
+    }
+
+    .confirm-box {
+      width: min(420px, 100%);
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .confirm-box p {
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .confirm-box .actions {
+      margin-top: 16px;
+    }
+
+    .day-close-box {
+      width: min(480px, 100%);
+      max-height: min(90vh, 720px);
+      overflow: auto;
+    }
+
+    .day-close-box h2 {
+      margin: 0;
+      font-size: 1.15rem;
+    }
+
+    .day-close-date {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .day-close-stats {
+      display: grid;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .day-close-stat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+    }
+
+    .day-close-stat span {
+      color: var(--muted);
+      font-size: .88rem;
+    }
+
+    .day-close-stat strong {
+      color: var(--orange);
+      font-size: 1rem;
+      white-space: nowrap;
+    }
+
+    .day-close-stat.highlight strong {
+      font-size: 1.2rem;
+    }
+
+    .day-close-section {
+      margin-top: 14px;
+    }
+
+    .day-close-section h3 {
+      margin: 0 0 8px;
+      color: var(--muted);
+      font-size: .82rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .day-close-list {
+      display: grid;
+      gap: 0;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+    }
+
+    .day-close-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 7px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, .06);
+      font-size: .9rem;
+    }
+
+    .day-close-row:last-child {
+      border-bottom: 0;
+    }
+
+    .day-close-row strong {
+      color: var(--orange);
+      font-weight: 900;
+    }
+
+    .day-close-note {
+      margin: 14px 0 0;
+      color: var(--muted);
+      font-size: .86rem;
+      line-height: 1.45;
+    }
+
+    .orders {
+      display: grid;
+      gap: 10px;
+      max-height: 560px;
+      overflow: auto;
+      padding: 16px;
+    }
+
+    .saved-order {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+      overflow: hidden;
+    }
+
+    .saved-order summary {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .saved-order summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .order-title {
+      display: block;
+      font-weight: 900;
+    }
+
+    .order-time {
+      display: block;
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: .8rem;
+    }
+
+    .saved-total {
+      color: var(--orange);
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .saved-body {
+      padding: 0 13px 13px;
+    }
+
+    .notes {
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: #191919;
+      font-size: .88rem;
+    }
+
+    .saved-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .legacy-orders-panel {
+      display: none;
+    }
+
+    .orders-page {
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .orders-section {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .orders-section + .orders-section {
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .orders-section-head {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 0;
+    }
+
+    .orders-section-head h3 {
+      font-size: .92rem;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .history-tools {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .history-filter {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr)) auto auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    .finance-dashboard {
+      display: grid;
+      gap: 16px;
+      padding: 16px;
+    }
+
+    .finance-periods {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .finance-entry-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .finance-period {
+      min-height: 38px;
+      border-radius: 999px;
+      padding: 0 14px;
+      color: var(--muted);
+      background: var(--panel-soft);
+      font-size: .84rem;
+      font-weight: 850;
+    }
+
+    .finance-period.active {
+      color: #111;
+      background: var(--orange);
+    }
+
+    .finance-custom {
+      display: none;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      align-items: end;
+    }
+
+    .finance-custom.show {
+      display: grid;
+    }
+
+    .finance-cards {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .finance-card,
+    .finance-form,
+    .finance-adjust {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+    }
+
+    .finance-card span {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .finance-card strong {
+      font-size: clamp(1.45rem, 5vw, 2rem);
+      line-height: 1;
+    }
+
+    .finance-balance {
+      border-color: rgba(255, 138, 31, .38);
+      background: linear-gradient(135deg, rgba(255, 138, 31, .22), #111 62%);
+    }
+
+    .finance-income strong,
+    .finance-entry-value.income {
+      color: var(--ok);
+    }
+
+    .finance-expense strong,
+    .finance-entry-value.expense {
+      color: var(--danger);
+    }
+
+    .finance-actions {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(260px, .75fr);
+      gap: 10px;
+    }
+
+    .finance-form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(120px, .5fr) minmax(130px, .5fr);
+      gap: 10px;
+    }
+
+    .finance-type {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .finance-type-option {
+      display: grid;
+      min-height: 42px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: var(--panel-soft);
+      font-weight: 850;
+    }
+
+    .finance-type-option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .finance-type-option:has(input:checked) {
+      color: #111;
+      background: var(--orange);
+      border-color: transparent;
+    }
+
+    .finance-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .finance-entry {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+    }
+
+    .finance-entry-title {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .finance-entry-title strong,
+    .finance-entry-title span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .finance-entry-title span {
+      color: var(--muted);
+      font-size: .84rem;
+    }
+
+    .finance-entry-value {
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .report-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    .history-list,
+    .report-box {
+      display: grid;
+      gap: 10px;
+      padding: 16px;
+    }
+
+    .history-card {
+      display: grid;
+      gap: 10px;
+      min-width: 0;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+    }
+
+    .history-card-head,
+    .history-total-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      min-width: 0;
+    }
+
+    .history-date {
+      display: grid;
+      gap: 3px;
+    }
+
+    .history-date strong {
+      color: var(--text);
+    }
+
+    .history-date span,
+    .history-items {
+      color: var(--muted);
+      font-size: .86rem;
+    }
+
+    .history-items {
+      display: grid;
+      gap: 5px;
+    }
+
+    .history-total-row strong {
+      color: var(--orange);
+    }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .report-metric {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #151515;
+    }
+
+    .report-metric span {
+      color: var(--muted);
+      font-size: .78rem;
+      font-weight: 750;
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+
+    .report-metric strong {
+      color: var(--text);
+      font-size: 1rem;
+    }
+
+    .pix-form,
+    .pix-result {
+      display: grid;
+      gap: 12px;
+      padding: 16px;
+    }
+
+    .pix-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .pix-result {
+      border-top: 1px solid var(--line);
+    }
+
+    .pix-result textarea {
+      min-height: 112px;
+    }
+
+    .pix-qr {
+      display: grid;
+      place-items: center;
+      min-height: 180px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #fff;
+    }
+
+    .pix-qr img {
+      display: block;
+      width: min(260px, 100%);
+      height: auto;
+    }
+
+    .stock-add-form {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+      padding: 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .stock-add-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(88px, .8fr) minmax(88px, .8fr) minmax(110px, 1fr);
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .stock-add-form select {
+      width: 100%;
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 11px 12px;
+      color: var(--text);
+      background: #101010;
+      outline: none;
+    }
+
+    .btn-icon-danger {
+      min-height: 36px;
+      padding: 0 12px;
+      color: #fff;
+      background: #531c1c;
+      border: 1px solid rgba(228, 71, 71, .45);
+      font-size: .86rem;
+      font-weight: 850;
+    }
+
+    @media (max-width: 640px) {
+      .stock-add-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .stock-add-grid .field:last-of-type {
+        grid-column: 1 / -1;
+      }
+
+      .stock-add-form .btn-primary {
+        grid-column: 1 / -1;
+      }
+    }
+
+    .stock-list,
+    .sales-list {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+      padding: 16px;
+    }
+
+    .stock-row,
+    .sales-row {
+      display: grid;
+      gap: 12px;
+      align-items: center;
+      min-width: 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+    }
+
+    .stock-row {
+      grid-template-columns: minmax(0, 1fr) minmax(80px, 96px) auto;
+    }
+
+    .sales-row {
+      grid-template-columns: minmax(0, 1fr) minmax(96px, auto);
+    }
+
+    .stock-row strong,
+    .sales-row strong {
+      display: block;
+      line-height: 1.2;
+    }
+
+    .stock-row span,
+    .sales-row span {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .stock-row input {
+      width: 96px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 9px 10px;
+      color: var(--text);
+      background: #0f0f0f;
+      text-align: center;
+      font-weight: 850;
+    }
+
+    .stock-row input:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255, 138, 31, .13);
+      outline: none;
+    }
+
+    .sales-number {
+      color: var(--orange);
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-align: right;
+    }
+
+    .summary-card {
+      display: grid;
+      gap: 8px;
+      padding: 24px 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #111;
+      text-align: center;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .summary-value {
+      color: var(--orange);
+      font-size: clamp(2.4rem, 8vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .stock-section-title {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+
+    .day-actions {
+      display: grid;
+      padding: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 94px;
+      z-index: 10;
+      max-width: min(360px, calc(100vw - 36px));
+      padding: 12px 14px;
+      border: 1px solid rgba(47, 209, 137, .5);
+      border-radius: var(--radius);
+      color: #dfffee;
+      background: #123226;
+      box-shadow: var(--shadow);
+      transform: translateY(18px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s ease, transform .2s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .side-menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 40;
+      background: rgba(0, 0, 0, .58);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .22s ease;
+    }
+
+    .side-menu-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .side-menu {
+      position: absolute;
+      top: 0;
+      right: 0;
+      display: grid;
+      align-content: start;
+      gap: 12px;
+      width: min(320px, 84vw);
+      height: 100%;
+      padding: 18px;
+      background: #151515;
+      border-left: 1px solid rgba(255, 138, 31, .28);
+      box-shadow: -18px 0 50px rgba(0, 0, 0, .38);
+      transform: translateX(100%);
+      transition: transform .24s ease;
+    }
+
+    .side-menu-overlay.open .side-menu {
+      transform: translateX(0);
+    }
+
+    .side-menu-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .side-menu-title {
+      font-size: 1rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+    }
+
+    .side-menu-close {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: var(--radius);
+      color: var(--text);
+      background: var(--panel-soft);
+      font-size: 1.35rem;
+      line-height: 1;
+    }
+
+    .side-menu-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .side-menu-item {
+      min-height: 48px;
+      border-radius: var(--radius);
+      padding: 0 14px;
+      color: var(--text);
+      background: #202020;
+      text-align: left;
+      font-weight: 850;
+    }
+
+    .side-menu-item.active {
+      color: #111;
+      background: var(--orange);
+    }
+
+    .side-menu-item.pending {
+      color: var(--muted);
+      border: 1px dashed rgba(255, 255, 255, .18);
+      background: transparent;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 12px;
+      z-index: 20;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      width: min(720px, calc(100% - 24px));
+      padding: 6px;
+      border: 1px solid rgba(255, 138, 31, .3);
+      border-radius: var(--radius);
+      background: rgba(15, 15, 15, .94);
+      box-shadow: var(--shadow);
+      transform: translateX(-50%);
+      backdrop-filter: blur(12px);
+      opacity: 1;
+      transition: opacity .28s ease;
+    }
+
+    .bottom-nav.nav-hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .nav-tab {
+      display: grid;
+      min-height: 46px;
+      place-items: center;
+      border-radius: var(--radius);
+      color: var(--muted);
+      background: transparent;
+      font-size: .82rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .nav-tab.active {
+      color: #111;
+      background: var(--orange);
+    }
+
+    @media (max-width: 980px) {
+      .layout,
+      .page-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .orders {
+        max-height: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .app {
+        padding: 10px;
+      }
+
+      .topbar {
+        grid-template-columns: minmax(0, 1fr) auto;
+        padding: 14px;
+      }
+
+      .day-total {
+        grid-column: 1 / -1;
+        width: 100%;
+        text-align: left;
+      }
+
+      .day-total-heading {
+        justify-content: space-between;
+      }
+
+      .brand-mark {
+        width: 42px;
+        height: 42px;
+      }
+
+      .panel-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .item {
+        grid-template-columns: 1fr auto;
+      }
+
+      .add-one {
+        display: none;
+      }
+
+      .qty {
+        grid-column: 2;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .history-filter {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .report-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .pix-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .finance-cards,
+      .finance-actions,
+      .finance-form-grid,
+      .finance-custom {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .finance-entry {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .finance-entry-value {
+        justify-self: start;
+      }
+
+      .stock-row {
+        grid-template-columns: minmax(0, 1fr) minmax(76px, 88px);
+        gap: 10px;
+      }
+
+      .stock-row input {
+        width: 100%;
+      }
+
+      .stock-row .btn-icon-danger {
+        grid-column: 1 / -1;
+        width: 100%;
+      }
+
+      .nav-tab {
+        min-height: 42px;
+        padding: 0 2px;
+        font-size: clamp(.58rem, 2.6vw, .72rem);
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <img src="logo-rafa-lanches.png" alt="">
+        </div>
+        <div>
+          <h1>RAFA LANCHES</h1>
+          <span class="sync-status" id="syncStatus">Dados locais</span>
+        </div>
+      </div>
+      <button class="top-menu-button" id="openSideMenu" type="button" aria-label="Abrir menu">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M4 7h16"></path>
+          <path d="M4 12h16"></path>
+          <path d="M4 17h16"></path>
+        </svg>
+      </button>
+      <div class="day-total">
+        <div class="day-total-heading">
+          <span>Total do dia</span>
+          <button class="day-total-eye" id="toggleDayTotal" type="button" aria-label="Esconder total do dia" aria-pressed="false">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M2.5 12s3.5-6 9.5-6 9.5 6 9.5 6-3.5 6-9.5 6-9.5-6-9.5-6Z"></path>
+              <circle cx="12" cy="12" r="2.7"></circle>
+            </svg>
+          </button>
+        </div>
+        <strong id="dayTotal">R$ 0,00</strong>
+      </div>
+    </header>
+
+    <div class="pages-viewport" id="pagesViewport">
+      <div class="pages-track" id="pagesTrack">
+    <section class="page active" id="page-new-order" data-page="new-order">
+      <div class="page-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Cardápio</h2>
+            <span class="chip" id="itemCount">0 itens no pedido</span>
+          </div>
+          <div class="menu" id="menu"></div>
+        </div>
+
+        <aside class="side">
+          <div class="panel">
+            <div class="panel-head">
+              <h2>Pedido atual</h2>
+              <span class="chip" id="nextOrder">Pedido #1</span>
+            </div>
+            <div class="order-box">
+              <div class="field">
+                <label for="customer">Cliente</label>
+                <input id="customer" type="text" placeholder="Nome ou mesa">
+              </div>
+              <div class="field">
+                <label for="discount">Desconto</label>
+                <input id="discount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 1,00">
+              </div>
+              <div class="field">
+                <label for="deliveryFee">Taxa de entrega</label>
+                <input id="deliveryFee" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 3,00">
+              </div>
+              <div class="current-list" id="currentList">
+                <p class="empty">Escolha os itens no cardápio.</p>
+              </div>
+              <div class="total-row">
+                <span>Total do pedido</span>
+                <strong id="currentTotal">R$ 0,00</strong>
+              </div>
+              <div class="actions">
+                <button class="btn" id="clearCurrent" type="button">Limpar pedido</button>
+                <button class="btn hidden" id="cancelEdit" type="button">Cancelar edição</button>
+                <button class="btn btn-primary" id="saveOrder" type="button" disabled>Salvar pedido</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel legacy-orders-panel" style="margin-top:18px">
+            <div class="panel-head">
+              <h2>Pedidos</h2>
+              <span class="chip" id="legacyOrdersCount">0 salvos</span>
+            </div>
+            <div class="orders" id="legacyOrdersList">
+              <p class="empty">Nenhum pedido salvo hoje.</p>
+            </div>
+            <div class="day-actions">
+              <button class="btn btn-danger" id="legacyClearDay" type="button">Limpar pedidos e começar novo dia</button>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="page" id="page-orders" data-page="orders">
+      <div class="single-page">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Pedidos</h2>
+            <span class="chip" id="ordersCount">0 salvos</span>
+          </div>
+          <div class="orders-page">
+            <section class="orders-section">
+              <div class="orders-section-head">
+                <h3>Em andamento</h3>
+                <span class="chip" id="openOrdersCount">0 em andamento</span>
+              </div>
+              <div class="orders" id="openOrdersList">
+                <p class="empty">Nenhum pedido em andamento.</p>
+              </div>
+            </section>
+
+            <section class="orders-section">
+              <div class="orders-section-head">
+                <h3>Finalizados</h3>
+                <span class="chip" id="finishedOrdersCount">0 finalizados</span>
+              </div>
+              <div class="orders" id="finishedOrdersList">
+                <p class="empty">Nenhum pedido finalizado.</p>
+              </div>
+            </section>
+          </div>
+          <div class="day-actions">
+            <button class="btn btn-danger" id="clearDay" type="button">Iniciar novo dia</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-stock" data-page="stock">
+      <div class="single-page">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Estoque disponível</h2>
+            <span class="chip" id="stockConfigured">0 restantes</span>
+          </div>
+          <div class="stock-list" id="stockList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-sales" data-page="sales">
+      <div class="single-page">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Vendas</h2>
+            <span class="chip" id="salesTotal">0 vendidos</span>
+          </div>
+          <div class="sales-list" id="salesList"></div>
+          <form class="pix-form" id="pixForm">
+            <div class="panel-head" style="padding:0;border:0">
+              <h2>Pix</h2>
+              <span class="chip">Valor escolhido</span>
+            </div>
+            <div class="pix-grid">
+              <div class="field">
+                <label for="pixKey">Chave Pix</label>
+                <input id="pixKey" type="text" value="+5583988953604" placeholder="+5583988953604">
+              </div>
+              <div class="field">
+                <label for="pixAmount">Valor</label>
+                <input id="pixAmount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Ex.: 25,00">
+              </div>
+              <div class="field">
+                <label for="pixName">Nome</label>
+                <input id="pixName" type="text" value="Luckyan Emmanuel dos Santos Silva">
+              </div>
+              <div class="field">
+                <label for="pixCity">Cidade</label>
+                <input id="pixCity" type="text" value="Campina Grande">
+              </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Gerar Pix</button>
+          </form>
+          <div class="pix-result hidden" id="pixResult">
+            <div class="pix-qr" id="pixQr"></div>
+            <textarea id="pixPayload" readonly></textarea>
+            <button class="btn" id="copyPixPayload" type="button">Copiar Pix</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-history" data-page="history">
+      <div class="single-page">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Histórico</h2>
+            <span class="chip" id="historyCount">0 dias</span>
+          </div>
+          <div class="history-tools">
+            <div class="history-filter">
+              <div class="field">
+                <label for="reportStart">De</label>
+                <input id="reportStart" type="date">
+              </div>
+              <div class="field">
+                <label for="reportEnd">Até</label>
+                <input id="reportEnd" type="date">
+              </div>
+              <button class="btn btn-primary" id="generateReport" type="button">Gerar relatório</button>
+              <button class="btn" id="copyHistoryText" type="button">Texto do histórico</button>
+            </div>
+          </div>
+          <div class="report-box" id="reportBox">
+            <p class="empty">Escolha um período para gerar um relatório.</p>
+          </div>
+          <div class="history-list" id="historyList">
+            <p class="empty">Nenhum dia registrado.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-finance" data-page="finance">
+      <div class="single-page">
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Controle financeiro</h2>
+            <span class="chip" id="financePeriodLabel">Hoje</span>
+          </div>
+          <div class="finance-dashboard">
+            <div class="finance-periods" id="financePeriods">
+              <button class="finance-period active" type="button" data-finance-period="today">Hoje</button>
+              <button class="finance-period" type="button" data-finance-period="7days">7 dias</button>
+              <button class="finance-period" type="button" data-finance-period="month">Mês atual</button>
+              <button class="finance-period" type="button" data-finance-period="custom">Personalizado</button>
+            </div>
+            <div class="finance-custom" id="financeCustomRange">
+              <div class="field">
+                <label for="financeStart">De</label>
+                <input id="financeStart" type="date">
+              </div>
+              <div class="field">
+                <label for="financeEnd">Até</label>
+                <input id="financeEnd" type="date">
+              </div>
+              <button class="btn btn-primary" id="applyFinanceRange" type="button">Aplicar</button>
+            </div>
+            <div class="finance-cards">
+              <div class="finance-card finance-balance">
+                <span>Saldo atual</span>
+                <strong id="financeBalance">R$ 0,00</strong>
+              </div>
+              <div class="finance-card finance-income">
+                <span>Receitas</span>
+                <strong id="financeIncome">R$ 0,00</strong>
+              </div>
+              <div class="finance-card finance-expense">
+                <span>Despesas</span>
+                <strong id="financeExpense">R$ 0,00</strong>
+              </div>
+            </div>
+            <button class="btn btn-primary" id="addDaySalesToFinance" type="button">Lançar venda do dia</button>
+            <div class="finance-actions">
+              <form class="finance-form" id="financeForm">
+                <h3>Novo lançamento</h3>
+                <div class="finance-type">
+                  <label class="finance-type-option"><input type="radio" name="financeType" value="income" checked> Receita</label>
+                  <label class="finance-type-option"><input type="radio" name="financeType" value="expense"> Despesa</label>
+                </div>
+                <div class="finance-form-grid">
+                  <div class="field">
+                    <label for="financeDescription">Descrição</label>
+                    <input id="financeDescription" type="text" placeholder="Ex.: Compra de ingredientes" required>
+                  </div>
+                  <div class="field">
+                    <label for="financeAmount">Valor</label>
+                    <input id="financeAmount" type="number" min="0" step="0.01" inputmode="decimal" placeholder="0,00" required>
+                  </div>
+                  <div class="field">
+                    <label for="financeDate">Data</label>
+                    <input id="financeDate" type="date" required>
+                  </div>
+                </div>
+                <button class="btn btn-primary" type="submit">Adicionar lançamento</button>
+              </form>
+              <form class="finance-adjust" id="financeBalanceForm">
+                <h3>Ajustar saldo</h3>
+                <div class="field">
+                  <label for="financeManualBalance">Novo saldo atual</label>
+                  <input id="financeManualBalance" type="number" step="0.01" inputmode="decimal" placeholder="0,00">
+                </div>
+                <button class="btn" type="submit">Salvar saldo</button>
+              </form>
+            </div>
+            <div class="finance-entry-filters" id="financeEntryFilters">
+              <button class="finance-period active" type="button" data-finance-entry-filter="all">Todos</button>
+              <button class="finance-period" type="button" data-finance-entry-filter="expense">Despesas</button>
+              <button class="finance-period" type="button" data-finance-entry-filter="income">Receitas</button>
+            </div>
+            <div class="finance-list" id="financeList">
+              <p class="empty">Nenhum lançamento nesse período.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+      </div>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegação principal">
+    <button class="nav-tab active" type="button" data-page="new-order">Novo</button>
+    <button class="nav-tab" type="button" data-page="orders">Pedidos</button>
+    <button class="nav-tab" type="button" data-page="stock">Estoque</button>
+    <button class="nav-tab" type="button" data-page="sales">Vendas</button>
+    <button class="nav-tab" type="button" data-page="history">Histórico</button>
+  </nav>
+
+  <div class="side-menu-overlay" id="sideMenuOverlay" aria-hidden="true">
+    <aside class="side-menu" role="dialog" aria-modal="true" aria-labelledby="sideMenuTitle">
+      <div class="side-menu-head">
+        <strong class="side-menu-title" id="sideMenuTitle">Menu</strong>
+        <button class="side-menu-close" id="closeSideMenu" type="button" aria-label="Fechar menu">×</button>
+      </div>
+      <div class="side-menu-list">
+        <button class="side-menu-item active" type="button" data-side-page="new-order">Novo</button>
+        <button class="side-menu-item" type="button" data-side-page="orders">Pedidos</button>
+        <button class="side-menu-item" type="button" data-side-page="stock">Estoque</button>
+        <button class="side-menu-item" type="button" data-side-page="sales">Vendas</button>
+        <button class="side-menu-item" type="button" data-side-page="history">Histórico</button>
+        <button class="side-menu-item" type="button" data-side-page="finance">Controle Financeiro</button>
+      </div>
+    </aside>
+  </div>
+
+  <div class="confirm-overlay hidden" id="simpleConfirmOverlay" role="dialog" aria-modal="true" aria-labelledby="simpleConfirmMessage">
+    <div class="confirm-box">
+      <p id="simpleConfirmMessage"></p>
+      <div class="actions">
+        <button class="btn" id="simpleConfirmCancel" type="button">Cancelar</button>
+        <button class="btn btn-danger" id="simpleConfirmOk" type="button">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="confirm-overlay hidden" id="dayCloseOverlay" role="dialog" aria-modal="true" aria-labelledby="dayCloseTitle">
+    <div class="confirm-box day-close-box">
+      <h2 id="dayCloseTitle">Resumo do dia</h2>
+      <p class="day-close-date" id="dayCloseDate"></p>
+      <div class="day-close-stats" id="dayCloseStats"></div>
+      <div id="dayCloseDetails"></div>
+      <p class="day-close-note">Ao confirmar, os pedidos e as vendas do dia serão apagados. O estoque restante continuará para o próximo dia.</p>
+      <div class="actions">
+        <button class="btn" id="dayCloseCancel" type="button">Voltar</button>
+        <button class="btn btn-danger" id="dayCloseConfirm" type="button">Confirmar e iniciar novo dia</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-database-compat.js"></script>
+
+  <script>
+    const STORAGE_KEY = "pastelaria.pedidos";
+    const STOCK_KEY = "pastelaria.estoque";
+    const CATALOG_KEY = "pastelaria.catalog";
+    const HISTORY_KEY = "pastelaria.historico";
+    const FINANCE_KEY = "pastelaria.financeiro";
+    const LOCAL_UPDATED_AT_KEY = "pastelaria.ultimaAlteracao";
+    const DAY_TOTAL_HIDDEN_KEY = "pastelaria.totalDiaOculto";
+    const ONLINE_DATA_PATH = "rafaPasteis/sharedState";
+    const PAGE_ORDER = ["new-order", "orders", "stock", "sales", "history", "finance"];
+    const $ = (selector) => document.querySelector(selector);
+    const currency = new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" });
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyApO3AAsvAoOHcNPLPhDkkqmuufeub0-Jo",
+      authDomain: "rafa-pasteis.firebaseapp.com",
+      databaseURL: "https://rafa-pasteis-default-rtdb.firebaseio.com",
+      projectId: "rafa-pasteis",
+      storageBucket: "rafa-pasteis.firebasestorage.app",
+      messagingSenderId: "1022330827752",
+      appId: "1:1022330827752:web:3b06edb505a28a0819ea5d"
+    };
+
+    let onlineDbRef = null;
+    let onlineReady = false;
+    let applyingOnlineState = false;
+    let remoteSaveTimer = null;
+    let firstOnlineLoad = true;
+    // Só true depois que já recebemos ao menos uma resposta do Firebase.
+    // Enquanto for false, nunca enviamos nada para lá — evita sobrescrever
+    // dados reais com o estado inicial (que pode estar vazio nesse dispositivo).
+    let remoteSnapshotReceived = false;
+    // Garante que as checagens de conflito rodem só uma vez, logo ao conectar
+    // — depois disso, tudo é aplicado em tempo real normalmente.
+    let reconciledOnce = false;
+    // Marca o horário da última mudança local (pedido, financeiro, estoque, etc.).
+    // Serve para nunca deixar um dado antigo vindo do servidor sobrescrever uma
+    // alteração que acabamos de fazer aqui (ex.: fechar o dia e lançar a receita).
+    let localUpdatedAt = localStorage.getItem(LOCAL_UPDATED_AT_KEY) || null;
+
+    const DEFAULT_MENU = [
+      {
+        category: "Tradicionais",
+        items: [
+          { id: "queijo", name: "Queijo", price: 6 },
+          { id: "misto", name: "Misto", price: 6 },
+          { id: "frango", name: "Frango", price: 6 },
+          { id: "carne", name: "Carne", price: 6 }
+        ]
+      },
+      {
+        category: "Especiais",
+        items: [
+          { id: "frango-queijo", name: "Frango c/ queijo", price: 7 },
+          { id: "carne-queijo", name: "Carne c/ queijo", price: 7 },
+          { id: "x-tudo", name: "X-Tudo", price: 8 },
+          { id: "chocolate-queijo", name: "Chocolate c/ queijo", price: 6 }
+        ]
+      },
+      {
+        category: "Bebidas",
+        items: [
+          { id: "coca-lata", name: "Coca lata", price: 5 },
+          { id: "guarana-lata", name: "Guaraná lata", price: 5 },
+          { id: "suco-copo", name: "Suco copo", price: 2 },
+          { id: "agua", name: "Água", price: 2 }
+        ]
+      }
+    ];
+
+    function isFirebaseConfigured() {
+      return firebaseConfig.apiKey
+        && !firebaseConfig.apiKey.startsWith("COLE_AQUI")
+        && firebaseConfig.databaseURL
+        && !firebaseConfig.databaseURL.startsWith("COLE_AQUI");
+    }
+
+    function setSyncStatus(message, status = "") {
+      const el = $("#syncStatus");
+      if (!el) return;
+      el.textContent = message;
+      el.classList.toggle("online", status === "online");
+      el.classList.toggle("error", status === "error");
+    }
+
+    function getLocalState() {
+      return {
+        catalog,
+        orders,
+        stock,
+        dayHistory,
+        financeState,
+        // Usa o horário da última edição real (não o do envio), para que a
+        // comparação de "quem é mais recente" entre aparelhos seja correta
+        // mesmo com o pequeno atraso do salvamento automático.
+        updatedAt: localUpdatedAt || new Date().toISOString()
+      };
+    }
+
+    function syncLocalCache() {
+      localStorage.setItem(CATALOG_KEY, JSON.stringify(catalog));
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      localStorage.setItem(STOCK_KEY, JSON.stringify(stock));
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(dayHistory));
+      localStorage.setItem(FINANCE_KEY, JSON.stringify(financeState));
+    }
+
+    function setLocalUpdatedAt(value = new Date().toISOString()) {
+      localUpdatedAt = value;
+      localStorage.setItem(LOCAL_UPDATED_AT_KEY, localUpdatedAt);
+    }
+
+    function applyOnlineState(state) {
+      if (!state || typeof state !== "object") return false;
+
+      applyingOnlineState = true;
+      const remoteHasFinanceState = Object.prototype.hasOwnProperty.call(state, "financeState");
+      const remoteFinanceState = remoteHasFinanceState ? normalizeFinanceState(state.financeState) : null;
+      const shouldKeepLocalFinance = !remoteHasFinanceState;
+
+      if (Array.isArray(state.catalog) && state.catalog.length) {
+        catalog = state.catalog.filter((item) => item && item.id && item.name);
+      }
+      orders = normalizeOrders(state.orders);
+      dayHistory = Array.isArray(state.dayHistory) ? state.dayHistory : [];
+      if (!shouldKeepLocalFinance) {
+        financeState = remoteFinanceState;
+      }
+      stock = state.stock && typeof state.stock === "object" && !Array.isArray(state.stock)
+        ? state.stock
+        : {};
+      cleanupLegacyStock();
+      if (state.updatedAt) setLocalUpdatedAt(state.updatedAt);
+      syncLocalCache();
+      applyingOnlineState = false;
+      renderAll();
+      return true;
+    }
+
+    function queueOnlineSave() {
+      if (applyingOnlineState) return;
+      // Só conta como "mudança local recente" se a sincronização já estiver
+      // ativa. Isso evita que o carregamento inicial (antes de conectar ao
+      // Firebase, quando os dados locais ainda podem estar vazios/default)
+      // seja confundido com uma mudança nova e apague dados reais salvos online.
+      if (onlineReady) setLocalUpdatedAt();
+      if (!onlineReady || !onlineDbRef || !remoteSnapshotReceived) return;
+      clearTimeout(remoteSaveTimer);
+      remoteSaveTimer = setTimeout(flushOnlineSave, 350);
+    }
+
+    function flushOnlineSave() {
+      clearTimeout(remoteSaveTimer);
+      if (!onlineReady || !onlineDbRef || !remoteSnapshotReceived || applyingOnlineState) return;
+      onlineDbRef.set(getLocalState()).catch((error) => {
+        setSyncStatus("Erro ao salvar online", "error");
+        console.error("Firebase save error", error);
+      });
+    }
+
+    function startOnlineSync() {
+      if (!isFirebaseConfigured()) {
+        setSyncStatus("Dados locais");
+        return;
+      }
+
+      if (!window.firebase) {
+        setSyncStatus("Sem Firebase", "error");
+        return;
+      }
+
+      try {
+        firebase.initializeApp(firebaseConfig);
+        setSyncStatus("Conectando...");
+
+        firebase.auth().signInAnonymously()
+          .then(() => {
+            onlineDbRef = firebase.database().ref(ONLINE_DATA_PATH);
+            onlineReady = true;
+            setSyncStatus("Sincronizado online", "online");
+
+            onlineDbRef.on("value", (snapshot) => {
+              remoteSnapshotReceived = true;
+              const remoteState = snapshot.val();
+
+              if (firstOnlineLoad && !remoteState) {
+                firstOnlineLoad = false;
+                reconciledOnce = true;
+                queueOnlineSave();
+                return;
+              }
+              firstOnlineLoad = false;
+
+              // As checagens abaixo (dado desatualizado / possível perda de
+              // dados) só fazem sentido UMA vez, no momento em que este
+              // aparelho conecta. Depois disso, com dois aparelhos ativos ao
+              // mesmo tempo, o certo é sempre aplicar em tempo real o que
+              // vier do servidor — senão os aparelhos ficam "brigando" para
+              // ver quem sobrescreve quem, e as ações de um deles parecem
+              // sumir.
+              if (!reconciledOnce) {
+                reconciledOnce = true;
+
+                // Se este aparelho já tinha uma mudança local mais recente
+                // que ainda não tinha sido enviada (ex.: o app fechou antes
+                // de sincronizar), evita que o dado antigo do servidor
+                // apague essa mudança.
+                const remoteHasMoreOrdersOnOpen = Array.isArray(remoteState && remoteState.orders)
+                  && remoteState.orders.length > orders.length;
+                if (localUpdatedAt && remoteState && remoteState.updatedAt
+                  && !remoteHasMoreOrdersOnOpen
+                  && remoteState.updatedAt < localUpdatedAt) {
+                  queueOnlineSave();
+                  return;
+                }
+
+                // Proteção contra perda de dados: se este aparelho já tem
+                // histórico/estoque salvos e o que está vindo do servidor tem
+                // bem menos informação, perguntamos antes de sobrescrever —
+                // assim dá para recuperar os dados de um aparelho que ficou
+                // um tempo sem sincronizar, em vez de perdê-los sem querer.
+                const localHistoryCount = dayHistory.length;
+                const localStockCount = Object.keys(stock || {}).length;
+                const localOrderCount = orders.length;
+                const localFinanceCount = financeState.entries.length;
+                const localFinanceHasData = hasFinanceData(financeState);
+                const remoteOrderCount = Array.isArray(remoteState && remoteState.orders)
+                  ? remoteState.orders.length : 0;
+                const remoteHistoryCount = Array.isArray(remoteState && remoteState.dayHistory)
+                  ? remoteState.dayHistory.length : 0;
+                const remoteStockCount = remoteState && remoteState.stock && typeof remoteState.stock === "object"
+                  ? Object.keys(remoteState.stock).length : 0;
+                const remoteFinanceState = remoteState && Object.prototype.hasOwnProperty.call(remoteState, "financeState")
+                  ? normalizeFinanceState(remoteState.financeState) : null;
+                const remoteFinanceCount = remoteFinanceState ? remoteFinanceState.entries.length : 0;
+                const remoteFinanceHasData = remoteFinanceState ? hasFinanceData(remoteFinanceState) : false;
+
+                const remoteHasMoreOrders = remoteOrderCount > localOrderCount;
+                const looksLikeDataLoss = !remoteHasMoreOrders && ((localHistoryCount > 0 && remoteHistoryCount < localHistoryCount)
+                  || (localStockCount > 0 && remoteStockCount === 0)
+                  || (localFinanceHasData && (!remoteFinanceHasData || remoteFinanceCount < localFinanceCount)));
+
+                if (looksLikeDataLoss) {
+                  showSimpleConfirm(
+                    `Os dados salvos online têm menos informações (histórico/estoque) que os deste aparelho (${localHistoryCount} dia(s) no histórico aqui contra ${remoteHistoryCount} online). Manter os dados DESTE aparelho e enviá-los para substituir os de lá?`,
+                    "Conflito de dados"
+                  ).then((keepLocal) => {
+                    if (keepLocal) {
+                      setLocalUpdatedAt();
+                      flushOnlineSave();
+                      showToast("Dados deste aparelho enviados para o servidor.");
+                    } else {
+                      applyOnlineState(remoteState);
+                    }
+                  });
+                  return;
+                }
+              }
+
+              // Uso normal, em tempo real — inclusive com outro aparelho
+              // editando ao mesmo tempo: aplica sempre o que vier do servidor.
+              applyOnlineState(remoteState);
+            }, (error) => {
+              setSyncStatus("Erro de leitura online", "error");
+              console.error("Firebase read error", error);
+            });
+          })
+          .catch((error) => {
+            setSyncStatus("Login online falhou", "error");
+            console.error("Firebase auth error", error);
+          });
+      } catch (error) {
+        setSyncStatus("Firebase inválido", "error");
+        console.error("Firebase init error", error);
+      }
+    }
+
+    function loadCatalog() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(CATALOG_KEY) || "[]");
+        if (Array.isArray(saved) && saved.length) {
+          return saved
+            .filter((item) => item && item.id && item.name)
+            .map(normalizeCatalogItem);
+        }
+      } catch {
+        /* ignore */
+      }
+
+      return DEFAULT_MENU.flatMap((group) =>
+        group.items.map((item) => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          isPastel: group.category !== "Bebidas",
+          type: group.category === "Bebidas" ? "Bebida" : "Pastel"
+        }))
+      );
+    }
+
+    let catalog = loadCatalog();
+    if (!localStorage.getItem(CATALOG_KEY)) {
+      persistCatalog();
+    }
+    let current = {};
+    let orders = loadOrders();
+    let stock = loadStock();
+    let dayHistory = loadDayHistory();
+    let financeState = loadFinanceState();
+    cleanupLegacyStock();
+    let editingOrderNumber = null;
+    let editingOrderKey = null;
+    let toastTimer = null;
+    let isDayTotalHidden = localStorage.getItem(DAY_TOTAL_HIDDEN_KEY) === "true";
+    let currentReportRecords = [];
+    let currentReportRange = { start: "", end: "" };
+    let financePeriod = "today";
+    let financeCustomRange = { start: "", end: "" };
+    let financeEntryFilter = "all";
+
+    function getAllItems() {
+      return catalog;
+    }
+
+    function getPastelItems() {
+      return catalog.filter((item) => item.isPastel);
+    }
+
+    function getDrinkItems() {
+      return catalog.filter((item) => !item.isPastel);
+    }
+
+    function getItemById(id) {
+      return catalog.find((item) => item.id === id);
+    }
+
+    function normalizeTypeName(value, fallback = "Pastel") {
+      return String(value || "").trim() || fallback;
+    }
+
+    function isPastelType(typeName) {
+      return !/^bebidas?$/i.test(normalizeTypeName(typeName));
+    }
+
+    function normalizeCatalogItem(item) {
+      const type = normalizeTypeName(item.type, item.isPastel === false ? "Bebida" : "Pastel");
+      return {
+        ...item,
+        type,
+        isPastel: typeof item.isPastel === "boolean" ? item.isPastel : isPastelType(type)
+      };
+    }
+
+    function getMenuGroups() {
+      return getAllItems().reduce((groups, item) => {
+        const category = normalizeTypeName(item.type, item.isPastel ? "Pastel" : "Bebida");
+        const group = groups.find((saved) => saved.category === category);
+        if (group) {
+          group.items.push(item);
+        } else {
+          groups.push({ category, items: [item] });
+        }
+        return groups;
+      }, []);
+    }
+
+    function persistCatalog() {
+      localStorage.setItem(CATALOG_KEY, JSON.stringify(catalog));
+      queueOnlineSave();
+    }
+
+    function createItemId(name) {
+      const slug = name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "") || "item";
+      return `${slug}-${Date.now().toString(36)}`;
+    }
+
+    function addCatalogItem(name, price, quantity, typeName) {
+      const type = normalizeTypeName(typeName);
+      const item = {
+        id: createItemId(name),
+        name,
+        price,
+        type,
+        isPastel: isPastelType(type)
+      };
+      catalog.push(item);
+      stock[item.id] = quantity;
+      persistCatalog();
+      persistStock();
+      return item;
+    }
+
+    function removeCatalogItem(id) {
+      catalog = catalog.filter((item) => item.id !== id);
+      delete stock[id];
+      delete current[id];
+      persistCatalog();
+      persistStock();
+    }
+
+    function showSimpleConfirm(message, confirmLabel = "Confirmar") {
+      return new Promise((resolve) => {
+        const overlay = $("#simpleConfirmOverlay");
+        const okButton = $("#simpleConfirmOk");
+        const cancelButton = $("#simpleConfirmCancel");
+
+        $("#simpleConfirmMessage").textContent = message;
+        okButton.textContent = confirmLabel;
+        overlay.classList.remove("hidden");
+
+        function finish(result) {
+          overlay.classList.add("hidden");
+          okButton.removeEventListener("click", onOk);
+          cancelButton.removeEventListener("click", onCancel);
+          resolve(result);
+        }
+
+        function onOk() {
+          finish(true);
+        }
+
+        function onCancel() {
+          finish(false);
+        }
+
+        okButton.addEventListener("click", onOk);
+        cancelButton.addEventListener("click", onCancel);
+      });
+    }
+
+    function getPageIndex(page = getCurrentPage()) {
+      const index = PAGE_ORDER.indexOf(page);
+      return index < 0 ? 0 : index;
+    }
+
+    function setTrackOffset(offsetPx = 0) {
+      const track = $("#pagesTrack");
+      const width = $("#pagesViewport")?.clientWidth || window.innerWidth || 1;
+      const base = -getPageIndex() * width;
+      track.style.transform = `translate3d(${base + offsetPx}px, 0, 0)`;
+    }
+
+    function updatePagesHeight() {
+      const viewport = $("#pagesViewport");
+      const activePage = document.querySelector(".page.active");
+      if (!viewport || !activePage) return;
+      viewport.style.height = `${activePage.offsetHeight}px`;
+    }
+
+    function setPage(page, { scroll = true } = {}) {
+      document.querySelectorAll(".page").forEach((el) => {
+        el.classList.toggle("active", el.dataset.page === page);
+      });
+      document.querySelectorAll(".nav-tab").forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.page === page);
+      });
+      document.querySelectorAll(".side-menu-item[data-side-page]").forEach((item) => {
+        item.classList.toggle("active", item.dataset.sidePage === page);
+      });
+      setTrackOffset();
+      updatePagesHeight();
+      if (scroll) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+
+    function getCurrentPage() {
+      return document.querySelector(".page.active")?.dataset.page || PAGE_ORDER[0];
+    }
+
+    function movePage(direction) {
+      const currentIndex = getPageIndex();
+      const nextIndex = currentIndex + direction;
+      if (nextIndex < 0 || nextIndex >= PAGE_ORDER.length) return;
+      setPage(PAGE_ORDER[nextIndex]);
+    }
+
+    function shouldIgnoreSwipeTarget(target) {
+      return Boolean(target.closest("input, textarea, select, button, a, .confirm-overlay, .bottom-nav, .side-menu-overlay"));
+    }
+
+    function loadOrders() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+        return normalizeOrders(saved);
+      } catch {
+        return [];
+      }
+    }
+
+    function persistOrders() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
+      queueOnlineSave();
+    }
+
+    function clearStoredOrders() {
+      localStorage.removeItem(STORAGE_KEY);
+      queueOnlineSave();
+    }
+
+    function loadDayHistory() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+        return Array.isArray(saved) ? saved : [];
+      } catch {
+        return [];
+      }
+    }
+
+    function persistDayHistory() {
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(dayHistory));
+      queueOnlineSave();
+    }
+
+    function normalizeFinanceState(value) {
+      const state = value && typeof value === "object" && !Array.isArray(value) ? value : {};
+      return {
+        balance: Number.isFinite(Number(state.balance)) ? Number(state.balance) : 0,
+        version: Math.max(0, Math.floor(Number(state.version) || 0)),
+        updatedAt: state.updatedAt || "",
+        entries: Array.isArray(state.entries) ? state.entries.filter((entry) =>
+          entry && (entry.type === "income" || entry.type === "expense") && Number.isFinite(Number(entry.amount))
+        ).map((entry) => ({
+          id: entry.id || `finance-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+          type: entry.type,
+          source: entry.source || "",
+          dayRecordId: entry.dayRecordId || null,
+          description: String(entry.description || "").trim() || (entry.type === "income" ? "Receita" : "Despesa"),
+          amount: Math.max(0, Number(entry.amount) || 0),
+          date: entry.date || todayIsoDate(),
+          createdAt: entry.createdAt || new Date().toISOString()
+        })) : []
+      };
+    }
+
+    function hasFinanceData(state) {
+      const normalized = normalizeFinanceState(state);
+      return normalized.entries.length > 0 || normalized.balance !== 0;
+    }
+
+    function loadFinanceState() {
+      try {
+        return normalizeFinanceState(JSON.parse(localStorage.getItem(FINANCE_KEY) || "{}"));
+      } catch {
+        return normalizeFinanceState({});
+      }
+    }
+
+    function persistFinanceState() {
+      financeState.version = (Number(financeState.version) || 0) + 1;
+      financeState.updatedAt = new Date().toISOString();
+      localStorage.setItem(FINANCE_KEY, JSON.stringify(financeState));
+      queueOnlineSave();
+    }
+
+    function clearStoredStock() {
+      localStorage.removeItem(STOCK_KEY);
+      queueOnlineSave();
+    }
+
+    function loadStock() {
+      try {
+        const saved = JSON.parse(localStorage.getItem(STOCK_KEY) || "{}");
+        return saved && typeof saved === "object" && !Array.isArray(saved) ? saved : {};
+      } catch {
+        return {};
+      }
+    }
+
+    function cleanupLegacyStock() {
+      if (!Number.isFinite(stock.pastelTotal)) return;
+      delete stock.pastelTotal;
+      persistStock();
+    }
+
+    function persistStock() {
+      localStorage.setItem(STOCK_KEY, JSON.stringify(stock));
+      queueOnlineSave();
+    }
+
+    function getTotalPastelsRemaining() {
+      return getPastelItems().reduce((sum, item) => {
+        const value = getStockValue(item.id);
+        return sum + (value === null ? 0 : value);
+      }, 0);
+    }
+
+    function getTotalPastelsSold() {
+      const sales = getSalesTotals();
+      return getPastelItems().reduce((sum, item) => sum + (sales[item.id] || 0), 0);
+    }
+
+    function money(value) {
+      return currency.format(value);
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function parseMoneyInput(value) {
+      const normalized = String(value || "").replace(",", ".");
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+    }
+
+    function parseSignedMoneyInput(value) {
+      const normalized = String(value || "").replace(",", ".");
+      const parsed = Number(normalized);
+      return Number.isFinite(parsed) ? parsed : 0;
+    }
+
+    function getCurrentLines() {
+      return Object.entries(current)
+        .filter(([, qty]) => qty > 0)
+        .map(([id, qty]) => {
+          const item = getItemById(id);
+          if (!item) return null;
+          return { ...item, qty, subtotal: item.price * qty };
+        })
+        .filter(Boolean);
+    }
+
+    function getCurrentSubtotal() {
+      return getCurrentLines().reduce((sum, item) => sum + item.subtotal, 0);
+    }
+
+    function getCurrentDiscount() {
+      const subtotal = getCurrentSubtotal();
+      return Math.min(parseMoneyInput($("#discount")?.value), subtotal);
+    }
+
+    function getCurrentDeliveryFee() {
+      return parseMoneyInput($("#deliveryFee")?.value);
+    }
+
+    function getCurrentTotal() {
+      return Math.max(0, getCurrentSubtotal() - getCurrentDiscount() + getCurrentDeliveryFee());
+    }
+
+    function getDayTotal() {
+      return orders.reduce((sum, order) => sum + order.total, 0);
+    }
+
+    function getSalesTotals() {
+      return orders.reduce((totals, order) => {
+        order.items.forEach((item) => {
+          totals[item.id] = (totals[item.id] || 0) + item.qty;
+        });
+        return totals;
+      }, {});
+    }
+
+    function getSalesRows() {
+      const sales = getSalesTotals();
+      return getAllItems()
+        .map((item) => {
+          const qty = sales[item.id] || 0;
+          return {
+            id: item.id,
+            name: item.name,
+            qty,
+            price: item.price,
+            total: qty * item.price,
+            isPastel: item.isPastel
+          };
+        })
+        .filter((row) => row.qty > 0);
+    }
+
+    function getLineMap(items) {
+      return items.reduce((map, item) => {
+        map[item.id] = (map[item.id] || 0) + item.qty;
+        return map;
+      }, {});
+    }
+
+    function getStockValue(id) {
+      return Number.isFinite(stock[id]) ? stock[id] : null;
+    }
+
+    function getStockLabel(id) {
+      const available = getStockValue(id);
+      if (available === null || available === 0) return "Sem estoque";
+      return `Disponíveis: ${available}`;
+    }
+
+    function getOrderableLimit(id) {
+      let reserved = 0;
+      if (editingOrderNumber !== null) {
+        const oldOrder = editingOrderKey ? findOrderByKey(editingOrderKey) : orders.find((order) => order.number === editingOrderNumber);
+        if (oldOrder) {
+          reserved = getLineMap(oldOrder.items)[id] || 0;
+        }
+      }
+
+      const available = getStockValue(id);
+      const base = available === null ? 0 : available;
+      return base + reserved;
+    }
+
+    function isOutOfStock(id) {
+      return getOrderableLimit(id) <= 0;
+    }
+
+    function hasDayData() {
+      return orders.length > 0
+        || getCurrentLines().length > 0;
+    }
+
+    function getDaySummary() {
+      const sales = getSalesTotals();
+      const soldByFlavor = getPastelItems()
+        .map((item) => ({ name: item.name, qty: sales[item.id] || 0 }))
+        .filter((row) => row.qty > 0);
+      const stockByFlavor = getPastelItems()
+        .map((item) => ({ name: item.name, qty: getStockValue(item.id) }))
+        .filter((row) => row.qty !== null);
+      const drinksSold = getDrinkItems().reduce((sum, item) => sum + (sales[item.id] || 0), 0);
+      const currentOrderLines = getCurrentLines().length;
+      const salesRows = getSalesRows();
+
+      return {
+        revenue: getDayTotal(),
+        orderCount: orders.length,
+        pastelSold: getTotalPastelsSold(),
+        pastelRemaining: getTotalPastelsRemaining(),
+        drinksSold,
+        salesRows,
+        soldByFlavor,
+        stockByFlavor,
+        currentOrderLines
+      };
+    }
+
+    function renderDayCloseSection(title, rows, emptyText) {
+      if (!rows.length) {
+        return `
+          <section class="day-close-section">
+            <h3>${title}</h3>
+            <div class="day-close-list">
+              <p class="empty" style="padding:4px 0">${emptyText}</p>
+            </div>
+          </section>
+        `;
+      }
+
+      return `
+        <section class="day-close-section">
+          <h3>${title}</h3>
+          <div class="day-close-list">
+            ${rows.map((row) => `
+              <div class="day-close-row">
+                <span>${row.name}</span>
+                <strong>${row.qty}</strong>
+              </div>
+            `).join("")}
+          </div>
+        </section>
+      `;
+    }
+
+    function showDayCloseSummary() {
+      return new Promise((resolve) => {
+        const summary = getDaySummary();
+        const overlay = $("#dayCloseOverlay");
+        const confirmButton = $("#dayCloseConfirm");
+        const cancelButton = $("#dayCloseCancel");
+        const today = new Date().toLocaleDateString("pt-BR", {
+          weekday: "long",
+          day: "2-digit",
+          month: "long",
+          year: "numeric"
+        });
+
+        $("#dayCloseDate").textContent = today.charAt(0).toUpperCase() + today.slice(1);
+        $("#dayCloseStats").innerHTML = `
+          <div class="day-close-stat highlight">
+            <span>Faturamento do dia</span>
+            <strong>${money(summary.revenue)}</strong>
+          </div>
+          <div class="day-close-stat">
+            <span>Pedidos realizados</span>
+            <strong>${summary.orderCount}</strong>
+          </div>
+          <div class="day-close-stat">
+            <span>Pastéis vendidos</span>
+            <strong>${summary.pastelSold}</strong>
+          </div>
+          <div class="day-close-stat">
+            <span>Bebidas vendidas</span>
+            <strong>${summary.drinksSold}</strong>
+          </div>
+          <div class="day-close-stat">
+            <span>Pastéis restantes</span>
+            <strong>${summary.pastelRemaining}</strong>
+          </div>
+        `;
+
+        const details = [
+          renderDayCloseSection("Vendas por sabor", summary.soldByFlavor, "Nenhum pastel vendido."),
+          renderDayCloseSection("Estoque restante por sabor", summary.stockByFlavor, "Nenhum estoque definido.")
+        ];
+
+        if (summary.currentOrderLines > 0) {
+          details.unshift(`
+            <section class="day-close-section">
+              <h3>Atenção</h3>
+              <div class="day-close-list">
+                <p class="empty" style="padding:4px 0">Há um pedido em andamento que também será descartado.</p>
+              </div>
+            </section>
+          `);
+        }
+
+        $("#dayCloseDetails").innerHTML = details.join("");
+        overlay.classList.remove("hidden");
+
+        function finish(result) {
+          overlay.classList.add("hidden");
+          confirmButton.removeEventListener("click", onConfirm);
+          cancelButton.removeEventListener("click", onCancel);
+          resolve(result);
+        }
+
+        function onConfirm() {
+          finish(true);
+        }
+
+        function onCancel() {
+          finish(false);
+        }
+
+        confirmButton.addEventListener("click", onConfirm);
+        cancelButton.addEventListener("click", onCancel);
+      });
+    }
+
+    function todayIsoDate() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset() * 60000;
+      return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+    }
+
+    function displayIsoDate(value) {
+      if (!value) return "";
+      const [year, month, day] = value.split("-");
+      return `${day}/${month}/${year}`;
+    }
+
+    function addDaysIso(days) {
+      const now = new Date();
+      now.setDate(now.getDate() + days);
+      const offset = now.getTimezoneOffset() * 60000;
+      return new Date(now.getTime() - offset).toISOString().slice(0, 10);
+    }
+
+    function monthStartIso() {
+      const now = new Date();
+      const start = new Date(now.getFullYear(), now.getMonth(), 1);
+      const offset = start.getTimezoneOffset() * 60000;
+      return new Date(start.getTime() - offset).toISOString().slice(0, 10);
+    }
+
+    function getFinanceRange() {
+      const today = todayIsoDate();
+      if (financePeriod === "7days") {
+        return { start: addDaysIso(-6), end: today, label: "Últimos 7 dias" };
+      }
+      if (financePeriod === "month") {
+        return { start: monthStartIso(), end: today, label: "Mês atual" };
+      }
+      if (financePeriod === "custom") {
+        return {
+          start: financeCustomRange.start,
+          end: financeCustomRange.end,
+          label: financeCustomRange.start || financeCustomRange.end
+            ? `${financeCustomRange.start ? displayIsoDate(financeCustomRange.start) : "Início"} até ${financeCustomRange.end ? displayIsoDate(financeCustomRange.end) : "hoje"}`
+            : "Personalizado"
+        };
+      }
+      return { start: today, end: today, label: "Hoje" };
+    }
+
+    function getFinanceEntriesInRange() {
+      const range = getFinanceRange();
+      return financeState.entries.filter((entry) =>
+        (!range.start || entry.date >= range.start)
+        && (!range.end || entry.date <= range.end)
+      );
+    }
+
+    function getVisibleFinanceEntries(entries) {
+      if (financeEntryFilter === "income") {
+        return entries.filter((entry) => entry.type === "income");
+      }
+      if (financeEntryFilter === "expense") {
+        return entries.filter((entry) => entry.type === "expense");
+      }
+      return entries;
+    }
+
+    function summarizeFinanceEntries(entries) {
+      return entries.reduce((summary, entry) => {
+        if (entry.type === "income") {
+          summary.income += Number(entry.amount) || 0;
+        } else {
+          summary.expense += Number(entry.amount) || 0;
+        }
+        return summary;
+      }, { income: 0, expense: 0 });
+    }
+
+    function pixNormalizeText(value, maxLength) {
+      return String(value || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9 .,&-]/g, "")
+        .toUpperCase()
+        .slice(0, maxLength);
+    }
+
+    function pixTlv(id, value) {
+      return id + String(value.length).padStart(2, "0") + value;
+    }
+
+    function pixCrc16(payload) {
+      let crc = 0xffff;
+      for (let i = 0; i < payload.length; i++) {
+        crc ^= payload.charCodeAt(i) << 8;
+        for (let bit = 0; bit < 8; bit++) {
+          crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+          crc &= 0xffff;
+        }
+      }
+      return crc.toString(16).toUpperCase().padStart(4, "0");
+    }
+
+    function buildPixPayload({ key, name, city, amount }) {
+      const cleanKey = String(key || "").trim();
+      const cleanName = pixNormalizeText(name, 25);
+      const cleanCity = pixNormalizeText(city, 15);
+      const numericAmount = Number(String(amount || "").replace(",", "."));
+
+      if (!cleanKey) {
+        throw new Error("Informe a chave Pix.");
+      }
+      if (!cleanName) {
+        throw new Error("Informe o nome do recebedor.");
+      }
+      if (!cleanCity) {
+        throw new Error("Informe a cidade.");
+      }
+      if (!Number.isFinite(numericAmount) || numericAmount <= 0) {
+        throw new Error("Informe um valor maior que zero.");
+      }
+
+      const merchantAccount = pixTlv("00", "br.gov.bcb.pix") + pixTlv("01", cleanKey);
+      let payload = "";
+      payload += pixTlv("00", "01");
+      payload += pixTlv("26", merchantAccount);
+      payload += pixTlv("52", "0000");
+      payload += pixTlv("53", "986");
+      payload += pixTlv("54", numericAmount.toFixed(2));
+      payload += pixTlv("58", "BR");
+      payload += pixTlv("59", cleanName);
+      payload += pixTlv("60", cleanCity);
+      payload += pixTlv("62", pixTlv("05", "***"));
+      payload += "6304";
+      return payload + pixCrc16(payload);
+    }
+
+    async function copyText(value, successMessage = "Texto copiado.") {
+      try {
+        await navigator.clipboard.writeText(value);
+        showToast(successMessage);
+      } catch {
+        showToast("Texto gerado. Selecione e copie.");
+      }
+    }
+
+    function createDayHistoryRecord() {
+      const summary = getDaySummary();
+      const now = new Date();
+      return {
+        id: `dia-${Date.now().toString(36)}`,
+        date: todayIsoDate(),
+        closedAt: now.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }),
+        revenue: summary.revenue,
+        orderCount: summary.orderCount,
+        openOrderCount: orders.filter((order) => !isOrderFinished(order)).length,
+        finishedOrderCount: orders.filter(isOrderFinished).length,
+        pastelSold: summary.pastelSold,
+        drinksSold: summary.drinksSold,
+        salesRows: summary.salesRows,
+        stockByFlavor: summary.stockByFlavor,
+        orders: JSON.parse(JSON.stringify(orders))
+      };
+    }
+
+    function saveDayHistoryRecord() {
+      const record = createDayHistoryRecord();
+      dayHistory.push(record);
+      persistDayHistory();
+      return record;
+    }
+
+    function getHistoryInRange(start, end) {
+      return dayHistory.filter((record) =>
+        (!start || record.date >= start)
+        && (!end || record.date <= end)
+      );
+    }
+
+    function summarizeHistory(records) {
+      const itemMap = {};
+      const summary = records.reduce((summary, record) => {
+        summary.revenue += Number(record.revenue) || 0;
+        summary.orderCount += Number(record.orderCount) || 0;
+        summary.openOrderCount += Number(record.openOrderCount) || 0;
+        summary.finishedOrderCount += Number(record.finishedOrderCount) || 0;
+        summary.pastelSold += Number(record.pastelSold) || 0;
+        summary.drinksSold += Number(record.drinksSold) || 0;
+        summary.days.push({
+          date: record.date,
+          revenue: Number(record.revenue) || 0,
+          orderCount: Number(record.orderCount) || 0
+        });
+
+        (record.salesRows || []).forEach((row) => {
+          if (!itemMap[row.id]) {
+            itemMap[row.id] = {
+              id: row.id,
+              name: row.name,
+              qty: 0,
+              total: 0
+            };
+            summary.items.push(itemMap[row.id]);
+          }
+          itemMap[row.id].qty += Number(row.qty) || 0;
+          itemMap[row.id].total += Number(row.total) || 0;
+        });
+
+        return summary;
+      }, { revenue: 0, orderCount: 0, openOrderCount: 0, finishedOrderCount: 0, pastelSold: 0, drinksSold: 0, items: [], days: [] });
+
+      summary.items.sort((a, b) => b.qty - a.qty || b.total - a.total);
+      summary.days.sort((a, b) => a.date.localeCompare(b.date));
+      summary.averageRevenue = records.length ? summary.revenue / records.length : 0;
+      summary.topItem = summary.items[0] || null;
+      return summary;
+    }
+
+    function recordsToMessage(records, title = "Relatório da Pastelaria") {
+      const summary = summarizeHistory(records);
+      const lines = [
+        title,
+        "",
+        `Dias registrados: ${records.length}`,
+        `Faturamento: ${money(summary.revenue)}`,
+        `Média por dia: ${money(summary.averageRevenue)}`,
+        `Pedidos: ${summary.orderCount}`,
+        `Finalizados: ${summary.finishedOrderCount}`,
+        `Em andamento no fechamento: ${summary.openOrderCount}`,
+        `Pastéis vendidos: ${summary.pastelSold}`,
+        `Bebidas vendidas: ${summary.drinksSold}`,
+        `Item mais vendido: ${summary.topItem ? `${summary.topItem.name} (${summary.topItem.qty})` : "Nenhum"}`,
+        "",
+        "Por item:"
+      ];
+
+      if (summary.items.length) {
+        summary.items.forEach((item) => {
+          lines.push(`- ${item.qty}x ${item.name}: ${money(item.total)}`);
+        });
+      } else {
+        lines.push("- Nenhum item vendido.");
+      }
+
+      lines.push("", "Por dia:");
+      summary.days.forEach((day) => {
+        lines.push(`- ${displayIsoDate(day.date)}: ${day.orderCount} pedidos, ${money(day.revenue)}`);
+      });
+
+      return lines.join("\n");
+    }
+
+    async function copyTextReport(records, title) {
+      if (!records.length) {
+        showToast("Nenhum registro para gerar texto.");
+        return;
+      }
+
+      const text = recordsToMessage(records, title);
+      $("#reportBox").innerHTML = `
+        <article class="history-card">
+          <div class="history-card-head">
+            <div class="history-date">
+              <strong>Texto para mensagem</strong>
+              <span>Copie e cole onde quiser.</span>
+            </div>
+            <button class="btn btn-small btn-danger" type="button" data-clear-report>Excluir texto</button>
+          </div>
+          <textarea readonly style="min-height:280px">${text}</textarea>
+        </article>
+      `;
+
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast("Texto copiado.");
+      } catch {
+        showToast("Texto gerado. Selecione e copie.");
+      }
+    }
+
+    function renderHistoryCard(record) {
+      const items = (record.salesRows || [])
+        .map((row) => `<span>${row.qty}x ${row.name} - ${money(row.total || 0)}</span>`)
+        .join("");
+
+      return `
+        <article class="history-card">
+          <div class="history-card-head">
+            <div class="history-date">
+              <strong>${displayIsoDate(record.date)}</strong>
+              <span>Fechado em ${record.closedAt || displayIsoDate(record.date)}</span>
+            </div>
+            <div class="actions-inline">
+              <button class="btn btn-small" type="button" data-edit-history="${record.id}">Editar</button>
+              <button class="btn btn-small btn-danger" type="button" data-delete-history="${record.id}">Excluir</button>
+            </div>
+          </div>
+          <div class="history-total-row">
+            <span>${record.orderCount || 0} pedidos</span>
+            <strong>${money(record.revenue || 0)}</strong>
+          </div>
+          <div class="history-items">
+            ${items || "<span>Nenhum item vendido.</span>"}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderHistory() {
+      $("#historyCount").textContent = `${dayHistory.length} dias`;
+      $("#historyList").innerHTML = dayHistory.length
+        ? dayHistory.slice().reverse().map(renderHistoryCard).join("")
+        : `<p class="empty">Nenhum dia registrado.</p>`;
+    }
+
+    function renderFinanceEntry(entry) {
+      const sign = entry.type === "income" ? "+" : "-";
+      const typeLabel = entry.type === "income" ? "Receita" : "Despesa";
+      return `
+        <article class="finance-entry">
+          <div class="finance-entry-title">
+            <strong>${escapeHtml(entry.description)}</strong>
+            <span>${typeLabel} · ${displayIsoDate(entry.date)}</span>
+          </div>
+          <strong class="finance-entry-value ${entry.type}">${sign} ${money(entry.amount)}</strong>
+          <button class="btn btn-small btn-danger" type="button" data-delete-finance="${entry.id}">Excluir</button>
+        </article>
+      `;
+    }
+
+    function renderFinance() {
+      const entries = getFinanceEntriesInRange();
+      const visibleEntries = getVisibleFinanceEntries(entries);
+      const summary = summarizeFinanceEntries(entries);
+      const range = getFinanceRange();
+
+      $("#financePeriodLabel").textContent = range.label;
+      $("#financeBalance").textContent = money(financeState.balance);
+      $("#financeIncome").textContent = money(summary.income);
+      $("#financeExpense").textContent = money(summary.expense);
+      const manualBalanceInput = $("#financeManualBalance");
+      if (document.activeElement !== manualBalanceInput) {
+        manualBalanceInput.value = financeState.balance ? String(financeState.balance) : "";
+      }
+      $("#financeDate").value = $("#financeDate").value || todayIsoDate();
+      $("#financeCustomRange").classList.toggle("show", financePeriod === "custom");
+
+      document.querySelectorAll(".finance-period").forEach((button) => {
+        button.classList.toggle("active", button.dataset.financePeriod === financePeriod);
+      });
+
+      document.querySelectorAll("[data-finance-entry-filter]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.financeEntryFilter === financeEntryFilter);
+      });
+
+      $("#financeList").innerHTML = visibleEntries.length
+        ? visibleEntries.slice().sort((a, b) => `${b.date}${b.createdAt}`.localeCompare(`${a.date}${a.createdAt}`)).map(renderFinanceEntry).join("")
+        : `<p class="empty">Nenhum lançamento nesse filtro.</p>`;
+    }
+
+    async function addDaySalesToFinance({ askOnDuplicate = true, dayRecordId = null } = {}) {
+      const amount = getDayTotal();
+      const date = todayIsoDate();
+      if (amount <= 0) {
+        return { added: false, reason: "empty" };
+      }
+
+      // Quando o fechamento vem de um registro de dia específico (dayRecordId),
+      // cada dia fechado é sempre único — nunca deve ser descartado por
+      // coincidir a mesma data de outro fechamento. A checagem por data só
+      // vale para o lançamento manual do botão "Lançar venda do dia".
+      const alreadyAdded = dayRecordId
+        ? financeState.entries.some((entry) => entry.dayRecordId === dayRecordId)
+        : financeState.entries.some((entry) => entry.source === "day-sales" && entry.date === date);
+
+      if (alreadyAdded) {
+        if (!askOnDuplicate) {
+          return { added: false, reason: "duplicate" };
+        }
+
+        const ok = await showSimpleConfirm(
+          `As vendas de hoje já foram lançadas. Lançar novamente ${money(amount)}?`,
+          "Lançar novamente"
+        );
+        if (!ok) return { added: false, reason: "cancelled" };
+      }
+
+      const entry = {
+        id: `finance-${Date.now().toString(36)}`,
+        type: "income",
+        source: "day-sales",
+        dayRecordId: dayRecordId || null,
+        description: `Vendas do dia - ${displayIsoDate(date)}`,
+        amount,
+        date,
+        createdAt: new Date().toISOString()
+      };
+
+      financeState.entries.push(entry);
+      financeState.balance += amount;
+      persistFinanceState();
+      return { added: true, amount };
+    }
+
+    function renderReport(records, start, end) {
+      if (!records.length) {
+        $("#reportBox").innerHTML = `<p class="empty">Nenhum registro encontrado nesse período.</p>`;
+        return;
+      }
+
+      const summary = summarizeHistory(records);
+      const period = `${start ? displayIsoDate(start) : "início"} até ${end ? displayIsoDate(end) : "hoje"}`;
+      $("#reportBox").innerHTML = `
+        <article class="history-card">
+          <div class="history-card-head">
+            <div class="history-date">
+              <strong>Relatório: ${period}</strong>
+              <span>${records.length} dia(s) registrados</span>
+            </div>
+            <button class="btn btn-small btn-danger" type="button" data-clear-report>Excluir relatório</button>
+          </div>
+          <div class="history-total-row">
+            <span>Faturamento</span>
+            <strong>${money(summary.revenue)}</strong>
+          </div>
+          <div class="history-items">
+            <span>Pedidos: ${summary.orderCount}</span>
+            <span>Pastéis vendidos: ${summary.pastelSold}</span>
+            <span>Bebidas vendidas: ${summary.drinksSold}</span>
+            ${summary.items.map((row) => `<span>${row.qty}x ${row.name} - ${money(row.total)}</span>`).join("")}
+          </div>
+        </article>
+      `;
+    }
+
+    function renderDetailedReport(records, start, end) {
+      if (!records.length) {
+        $("#reportBox").innerHTML = `<p class="empty">Nenhum registro encontrado nesse período.</p>`;
+        return;
+      }
+
+      const summary = summarizeHistory(records);
+      const period = `${start ? displayIsoDate(start) : "início"} até ${end ? displayIsoDate(end) : "hoje"}`;
+      $("#reportBox").innerHTML = `
+        <article class="history-card">
+          <div class="history-card-head">
+            <div class="history-date">
+              <strong>Relatório: ${period}</strong>
+              <span>${records.length} dia(s) registrados</span>
+            </div>
+            <div class="report-actions">
+              <button class="btn btn-small" type="button" data-copy-report>Copiar texto</button>
+              <button class="btn btn-small btn-danger" type="button" data-clear-report>Excluir relatório</button>
+            </div>
+          </div>
+          <div class="report-grid">
+            <div class="report-metric">
+              <span>Faturamento</span>
+              <strong>${money(summary.revenue)}</strong>
+            </div>
+            <div class="report-metric">
+              <span>Média por dia</span>
+              <strong>${money(summary.averageRevenue)}</strong>
+            </div>
+            <div class="report-metric">
+              <span>Pedidos</span>
+              <strong>${summary.orderCount}</strong>
+            </div>
+            <div class="report-metric">
+              <span>Item mais vendido</span>
+              <strong>${summary.topItem ? `${summary.topItem.name} (${summary.topItem.qty})` : "Nenhum"}</strong>
+            </div>
+          </div>
+          <div class="history-items">
+            <span>Finalizados: ${summary.finishedOrderCount}</span>
+            <span>Em andamento no fechamento: ${summary.openOrderCount}</span>
+            <span>Pastéis vendidos: ${summary.pastelSold}</span>
+            <span>Bebidas vendidas: ${summary.drinksSold}</span>
+            <strong>Por item</strong>
+            ${summary.items.map((row) => `<span>${row.qty}x ${row.name} - ${money(row.total)}</span>`).join("") || "<span>Nenhum item vendido.</span>"}
+            <strong>Por dia</strong>
+            ${summary.days.map((row) => `<span>${displayIsoDate(row.date)} - ${row.orderCount} pedidos - ${money(row.revenue)}</span>`).join("")}
+          </div>
+        </article>
+      `;
+    }
+
+    function nextOrderNumber() {
+      return orders.reduce((max, order) => Math.max(max, Number(order.number) || 0), 0) + 1;
+    }
+
+    function getOrderKey(order) {
+      if (!order._id) {
+        order._id = `order-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+      }
+      return order._id;
+    }
+
+    function findOrderByKey(key) {
+      return orders.find((item) => getOrderKey(item) === key)
+        || orders.find((item) => String(item.number) === String(key));
+    }
+
+    function normalizeOrders(value) {
+      return Array.isArray(value) ? value.map((order) => {
+        if (!order || typeof order !== "object") return null;
+        return {
+          ...order,
+          _id: order._id || `order-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`
+        };
+      }).filter(Boolean) : [];
+    }
+
+    function renderMenu() {
+      const groups = getMenuGroups();
+
+      if (!groups.length) {
+        $("#menu").innerHTML = `<p class="empty">Nenhum item cadastrado. Adicione itens na aba Estoque.</p>`;
+        return;
+      }
+
+      $("#menu").innerHTML = groups.map((group) => `
+        <section class="category">
+          <div class="category-title">
+            <h3>${group.category}</h3>
+            <span>${group.items.length} opções</span>
+          </div>
+          ${group.items.map((item) => {
+            const currentQty = current[item.id] || 0;
+            const limit = getOrderableLimit(item.id);
+            const outOfStock = isOutOfStock(item.id);
+            const atLimit = currentQty >= limit;
+            const locked = outOfStock && currentQty === 0;
+            const stockClass = outOfStock ? "item-stock out" : "item-stock";
+
+            return `
+            <article class="item${locked ? " item-out-of-stock" : ""}">
+              <div>
+                <span class="item-name">${item.name}</span>
+                <p class="item-price">${money(item.price)}</p>
+                <span class="${stockClass}">${getStockLabel(item.id)}</span>
+              </div>
+              <div class="qty" aria-label="Quantidade de ${item.name}">
+                <button type="button" data-action="decrease" data-id="${item.id}" aria-label="Diminuir ${item.name}"${currentQty === 0 ? " disabled" : ""}>-</button>
+                <input type="number" min="0" max="${limit}" inputmode="numeric" value="${currentQty}" data-id="${item.id}" aria-label="Quantidade ${item.name}"${locked ? " disabled" : ""}>
+                <button type="button" data-action="increase" data-id="${item.id}" aria-label="Aumentar ${item.name}"${locked || atLimit ? " disabled" : ""}>+</button>
+              </div>
+              <button class="add-one" type="button" data-action="increase" data-id="${item.id}" aria-label="Adicionar ${item.name}"${locked || atLimit ? " disabled" : ""}>+</button>
+            </article>
+          `;
+          }).join("")}
+        </section>
+      `).join("");
+    }
+
+    function renderCurrent() {
+      const lines = getCurrentLines();
+      const isEditing = editingOrderNumber !== null;
+      $("#currentList").innerHTML = lines.length
+        ? lines.map((item) => `
+          <div class="line">
+            <div>
+              <strong>${item.qty}x ${item.name}</strong>
+              <span>${money(item.price)} cada</span>
+            </div>
+            <div class="line-price">${money(item.subtotal)}</div>
+          </div>
+        `).join("")
+        : `<p class="empty">Escolha os itens no cardápio.</p>`;
+
+      $("#currentTotal").textContent = money(getCurrentTotal());
+      $("#itemCount").textContent = `${lines.reduce((sum, item) => sum + item.qty, 0)} itens no pedido`;
+      $("#saveOrder").disabled = lines.length === 0;
+      $("#saveOrder").textContent = isEditing ? "Atualizar pedido" : "Salvar pedido";
+      $("#cancelEdit").classList.toggle("hidden", !isEditing);
+      $("#nextOrder").textContent = isEditing ? `Editando #${editingOrderNumber}` : `Pedido #${nextOrderNumber()}`;
+
+      document.querySelectorAll(".qty input").forEach((input) => {
+        input.value = current[input.dataset.id] || 0;
+      });
+    }
+
+    function renderStockRow(item) {
+      const available = getStockValue(item.id);
+      return `
+        <div class="stock-row">
+          <div>
+            <strong>${item.name}</strong>
+            <span>${money(item.price)} · ${normalizeTypeName(item.type, item.isPastel ? "Pastel" : "Bebida")}</span>
+          </div>
+          <input type="number" min="0" inputmode="numeric" value="${available === null ? "" : available}" data-stock-id="${item.id}" aria-label="Disponíveis ${item.name}" placeholder="-">
+          <button class="btn-icon-danger" type="button" data-remove-item="${item.id}">Excluir</button>
+        </div>
+      `;
+    }
+
+    function renderStock() {
+      const remaining = getTotalPastelsRemaining();
+      const items = getAllItems();
+      $("#stockConfigured").textContent = `${remaining} restantes`;
+
+      const itemsHtml = items.length
+        ? items.map((item) => renderStockRow(item)).join("")
+        : `<p class="empty">Nenhum item cadastrado.</p>`;
+
+      $("#stockList").innerHTML = `
+        <form class="stock-add-form" id="stockAddForm">
+          <div class="stock-add-grid">
+            <div class="field">
+              <label for="newItemName">Nome do item</label>
+              <input id="newItemName" type="text" placeholder="Ex.: Queijo" required>
+            </div>
+            <div class="field">
+              <label for="newItemPrice">Preço</label>
+              <input id="newItemPrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="6" required>
+            </div>
+            <div class="field">
+              <label for="newItemQty">Quantidade</label>
+              <input id="newItemQty" type="number" min="0" inputmode="numeric" placeholder="10" required>
+            </div>
+            <div class="field">
+              <label for="newItemType">Tipo</label>
+              <input id="newItemType" type="text" placeholder="Ex.: Pastel, Bebida, Combo" required>
+            </div>
+          </div>
+          <button class="btn btn-primary" type="submit">Adicionar item</button>
+        </form>
+        <div class="summary-card">
+          <span class="summary-label">Total de pastéis restantes</span>
+          <strong class="summary-value" id="stockPastelDisplay">${remaining}</strong>
+        </div>
+        ${itemsHtml}
+      `;
+    }
+
+    function renderSales() {
+      const sales = getSalesTotals();
+      const totalSold = getTotalPastelsSold();
+      $("#salesTotal").textContent = `${totalSold} vendidos`;
+
+      const itemsHtml = getPastelItems().map((item) => {
+        const sold = sales[item.id] || 0;
+        return `
+          <div class="sales-row">
+            <div>
+              <strong>${item.name}</strong>
+              <span>${money(item.price)} cada</span>
+            </div>
+            <div class="sales-number">${sold}</div>
+          </div>
+        `;
+      }).join("");
+
+      $("#salesList").innerHTML = `
+        <div class="summary-card">
+          <span class="summary-label">Total de pastéis vendidos</span>
+          <strong class="summary-value" id="salesPastelDisplay">${totalSold}</strong>
+        </div>
+        ${itemsHtml}
+      `;
+    }
+
+    function isOrderFinished(order) {
+      return order.status === "finished";
+    }
+
+    function renderOrderCard(order) {
+      const finished = isOrderFinished(order);
+      const orderKey = getOrderKey(order);
+      return `
+        <details class="saved-order" open>
+          <summary>
+            <span>
+              <span class="order-title">Pedido #${order.number}${order.customer ? ` - ${order.customer}` : ""}</span>
+              <span class="order-time">${order.createdAt}${order.updatedAt ? ` | editado ${order.updatedAt}` : ""}${finished && order.finishedAt ? ` | finalizado ${order.finishedAt}` : ""}</span>
+            </span>
+            <span class="saved-total">${money(order.total)}</span>
+          </summary>
+          <div class="saved-body">
+            ${order.items.map((item) => `
+              <div class="line">
+                <div>
+                  <strong>${item.qty}x ${item.name}</strong>
+                  <span>${money(item.price)} cada</span>
+                </div>
+                <div class="line-price">${money(item.subtotal)}</div>
+              </div>
+            `).join("")}
+            ${order.discount ? `<p class="notes">Desconto: ${money(order.discount)}</p>` : ""}
+            ${order.deliveryFee ? `<p class="notes">Taxa de entrega: ${money(order.deliveryFee)}</p>` : ""}
+            ${order.notes ? `<p class="notes">${order.notes}</p>` : ""}
+            <div class="saved-actions">
+              ${finished ? "" : `<button class="btn btn-small btn-primary" type="button" data-finish-order="${orderKey}">Finalizar pedido</button>`}
+              <button class="btn btn-small" type="button" data-edit-order="${orderKey}">Editar pedido</button>
+              <button class="btn btn-small btn-danger" type="button" data-delete-order="${orderKey}">Excluir pedido</button>
+            </div>
+          </div>
+        </details>
+      `;
+    }
+
+    function renderDayTotal() {
+      $("#dayTotal").textContent = isDayTotalHidden ? "********" : money(getDayTotal());
+      const toggle = $("#toggleDayTotal");
+      toggle.classList.toggle("is-hidden", isDayTotalHidden);
+      toggle.setAttribute("aria-pressed", String(isDayTotalHidden));
+      toggle.setAttribute("aria-label", isDayTotalHidden ? "Mostrar total do dia" : "Esconder total do dia");
+    }
+
+    function renderOrders() {
+      renderDayTotal();
+      $("#ordersCount").textContent = `${orders.length} salvos`;
+      const openOrders = orders.filter((order) => !isOrderFinished(order));
+      const finishedOrders = orders.filter(isOrderFinished);
+
+      $("#openOrdersCount").textContent = `${openOrders.length} em andamento`;
+      $("#finishedOrdersCount").textContent = `${finishedOrders.length} finalizados`;
+      $("#openOrdersList").innerHTML = openOrders.length
+        ? openOrders.slice().reverse().map(renderOrderCard).join("")
+        : `<p class="empty">Nenhum pedido em andamento.</p>`;
+      $("#finishedOrdersList").innerHTML = finishedOrders.length
+        ? finishedOrders.slice().reverse().map(renderOrderCard).join("")
+        : `<p class="empty">Nenhum pedido finalizado.</p>`;
+    }
+
+    function renderAll() {
+      renderMenu();
+      renderCurrent();
+      renderStock();
+      renderSales();
+      renderOrders();
+      renderHistory();
+      renderFinance();
+      updatePagesHeight();
+    }
+
+    function setQuantity(id, qty) {
+      let next = Math.max(0, Number.isFinite(qty) ? Math.floor(qty) : 0);
+      const limit = getOrderableLimit(id);
+      const currentQty = current[id] || 0;
+
+      if (next > currentQty && isOutOfStock(id)) {
+        showToast(`${getItemById(id)?.name || "Item"} sem estoque.`);
+        return;
+      }
+
+      if (next > limit) {
+        if (next > currentQty) {
+          showToast(`${getItemById(id)?.name || "Item"}: só há ${limit} em estoque.`);
+        }
+        next = limit;
+      }
+
+      if (next === 0) {
+        delete current[id];
+      } else {
+        current[id] = next;
+      }
+
+      renderMenu();
+      renderCurrent();
+    }
+
+    function resetCurrent() {
+      current = {};
+      editingOrderNumber = null;
+      editingOrderKey = null;
+      $("#customer").value = "";
+      $("#discount").value = "";
+      $("#deliveryFee").value = "";
+      renderAll();
+    }
+
+    function showToast(message) {
+      const toast = $("#toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function validateStockChange(oldItems, newItems) {
+      const oldMap = getLineMap(oldItems);
+      const newMap = getLineMap(newItems);
+
+      for (const item of getAllItems()) {
+        const delta = (newMap[item.id] || 0) - (oldMap[item.id] || 0);
+        const available = getStockValue(item.id);
+        const effectiveAvailable = available === null ? 0 : available;
+        if (delta > effectiveAvailable) {
+          return { item, available: effectiveAvailable, needed: delta };
+        }
+      }
+
+      return null;
+    }
+
+    function applyStockChange(oldItems, newItems) {
+      const oldMap = getLineMap(oldItems);
+      const newMap = getLineMap(newItems);
+
+      getAllItems().forEach((item) => {
+        const available = getStockValue(item.id);
+        if (available === null) return;
+        const delta = (newMap[item.id] || 0) - (oldMap[item.id] || 0);
+        stock[item.id] = Math.max(0, available - delta);
+      });
+
+      persistStock();
+    }
+
+    function restoreStockFromOrder(items) {
+      items.forEach((item) => {
+        const available = getStockValue(item.id);
+        stock[item.id] = (available === null ? 0 : available) + item.qty;
+      });
+      persistStock();
+    }
+
+    async function deleteOrder(orderKey) {
+      const order = findOrderByKey(orderKey);
+      if (!order) {
+        showToast("Pedido não encontrado.");
+        return;
+      }
+
+      const ok = await showSimpleConfirm(
+        `Excluir o Pedido #${order.number}${order.customer ? ` (${order.customer})` : ""}? O estoque será devolvido.`,
+        "Excluir pedido"
+      );
+      if (!ok) return;
+
+      restoreStockFromOrder(order.items);
+      const targetKey = getOrderKey(order);
+      orders = orders.filter((item) => getOrderKey(item) !== targetKey);
+      persistOrders();
+
+      if (editingOrderNumber === order.number) {
+        resetCurrent();
+      } else {
+        renderAll();
+      }
+
+      showToast(`Pedido #${order.number} excluído.`);
+    }
+
+    function finishOrder(orderKey) {
+      const order = findOrderByKey(orderKey);
+      if (!order) {
+        showToast("Pedido não encontrado.");
+        return;
+      }
+
+      if (isOrderFinished(order)) {
+        showToast(`Pedido #${order.number} já está finalizado.`);
+        return;
+      }
+
+      const now = new Date();
+      const targetKey = getOrderKey(order);
+      orders = orders.map((saved) => getOrderKey(saved) === targetKey
+        ? {
+          ...saved,
+          status: "finished",
+          finishedAt: now.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" })
+        }
+        : saved
+      );
+      persistOrders();
+      renderAll();
+      showToast(`Pedido #${order.number} finalizado.`);
+    }
+
+    async function removeStockItem(id) {
+      const item = getItemById(id);
+      if (!item) return;
+
+      const ok = await showSimpleConfirm(
+        `Excluir "${item.name}" do estoque?`,
+        "Excluir item"
+      );
+      if (!ok) return;
+
+      removeCatalogItem(id);
+      renderAll();
+      showToast(`"${item.name}" removido do estoque.`);
+    }
+
+    function startEditOrder(orderKey) {
+      const order = findOrderByKey(orderKey);
+      if (!order) {
+        showToast("Pedido não encontrado.");
+        return;
+      }
+
+      editingOrderNumber = order.number;
+      editingOrderKey = getOrderKey(order);
+      current = getLineMap(order.items);
+      $("#customer").value = order.customer || "";
+      $("#discount").value = order.discount ? String(order.discount).replace(".", ",") : "";
+      $("#deliveryFee").value = order.deliveryFee ? String(order.deliveryFee).replace(".", ",") : "";
+      renderAll();
+      setPage("new-order");
+      showToast(`Editando Pedido #${order.number}.`);
+    }
+
+    async function restoreHistoryForEditing(record) {
+      const savedOrders = Array.isArray(record.orders) ? record.orders : [];
+      if (!savedOrders.length) {
+        showToast("Esse registro antigo não tem os pedidos salvos para edição.");
+        return;
+      }
+
+      const hasCurrentOrders = orders.length > 0 || getCurrentLines().length > 0;
+      const message = hasCurrentOrders
+        ? `Editar o dia ${displayIsoDate(record.date)}? Os pedidos atuais serão substituídos pelos pedidos desse registro.`
+        : `Editar o dia ${displayIsoDate(record.date)}? Os pedidos desse registro voltarão para a aba Pedidos.`;
+      const ok = await showSimpleConfirm(message, "Editar dia");
+      if (!ok) return;
+
+      orders = JSON.parse(JSON.stringify(savedOrders));
+      dayHistory = dayHistory.filter((item) => item.id !== record.id);
+
+      // Remove a receita de "Vendas do dia" que estava vinculada a esse
+      // registro. Assim, quando o dia for fechado de novo, uma nova receita
+      // correta é lançada, sem deixar uma receita antiga/duplicada perdida
+      // no controle financeiro.
+      const linkedEntry = financeState.entries.find((entry) => entry.dayRecordId === record.id);
+      if (linkedEntry) {
+        financeState.balance = Math.max(0, financeState.balance - linkedEntry.amount);
+        financeState.entries = financeState.entries.filter((entry) => entry.dayRecordId !== record.id);
+        persistFinanceState();
+      }
+
+      persistOrders();
+      persistDayHistory();
+      resetCurrent();
+      $("#reportBox").innerHTML = `<p class="empty">Escolha um período para gerar um relatório.</p>`;
+      currentReportRecords = [];
+      currentReportRange = { start: "", end: "" };
+      updatePagesHeight();
+      setPage("orders");
+      showToast("Dia reaberto para edição.");
+    }
+
+    $("#toggleDayTotal").addEventListener("click", () => {
+      isDayTotalHidden = !isDayTotalHidden;
+      localStorage.setItem(DAY_TOTAL_HIDDEN_KEY, String(isDayTotalHidden));
+      renderDayTotal();
+    });
+
+    $("#menu").addEventListener("click", (event) => {
+      const button = event.target.closest("button[data-action]");
+      if (!button || button.disabled) return;
+      const id = button.dataset.id;
+      const delta = button.dataset.action === "increase" ? 1 : -1;
+      setQuantity(id, (current[id] || 0) + delta);
+    });
+
+    $("#menu").addEventListener("input", (event) => {
+      if (!event.target.matches(".qty input")) return;
+      setQuantity(event.target.dataset.id, Number(event.target.value));
+    });
+
+    $("#discount").addEventListener("input", () => {
+      renderCurrent();
+    });
+
+    $("#deliveryFee").addEventListener("input", () => {
+      renderCurrent();
+    });
+
+    $("#stockList").addEventListener("submit", (event) => {
+      if (!event.target.matches("#stockAddForm")) return;
+      event.preventDefault();
+
+      const name = $("#newItemName").value.trim();
+      const price = Number($("#newItemPrice").value);
+      const quantity = Math.max(0, Math.floor(Number($("#newItemQty").value) || 0));
+      const typeName = normalizeTypeName($("#newItemType").value);
+
+      if (!name) {
+        showToast("Informe o nome do item.");
+        return;
+      }
+
+      if (!Number.isFinite(price) || price < 0) {
+        showToast("Informe um preço válido.");
+        return;
+      }
+
+      addCatalogItem(name, Math.round(price * 100) / 100, quantity, typeName);
+      $("#newItemName").value = "";
+      $("#newItemPrice").value = "";
+      $("#newItemQty").value = "";
+      $("#newItemType").value = "";
+      renderAll();
+      showToast(`"${name}" adicionado ao estoque.`);
+    });
+
+    $("#stockList").addEventListener("input", (event) => {
+      if (!event.target.matches("[data-stock-id]")) return;
+      const id = event.target.dataset.stockId;
+      const raw = event.target.value;
+
+      if (raw === "") {
+        delete stock[id];
+      } else {
+        stock[id] = Math.max(0, Math.floor(Number(raw) || 0));
+      }
+
+      persistStock();
+      renderMenu();
+      renderSales();
+      const remaining = getTotalPastelsRemaining();
+      $("#stockConfigured").textContent = `${remaining} restantes`;
+      const stockDisplay = $("#stockPastelDisplay");
+      if (stockDisplay) stockDisplay.textContent = remaining;
+    });
+
+    $("#stockList").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-remove-item]");
+      if (!button) return;
+      removeStockItem(button.dataset.removeItem);
+    });
+
+    $("#page-orders").addEventListener("click", (event) => {
+      const finishButton = event.target.closest("[data-finish-order]");
+      if (finishButton) {
+        finishOrder(finishButton.dataset.finishOrder);
+        return;
+      }
+
+      const editButton = event.target.closest("[data-edit-order]");
+      if (editButton) {
+        startEditOrder(editButton.dataset.editOrder);
+        return;
+      }
+
+      const deleteButton = event.target.closest("[data-delete-order]");
+      if (deleteButton) {
+        deleteOrder(deleteButton.dataset.deleteOrder);
+      }
+    });
+
+    $("#clearCurrent").addEventListener("click", () => {
+      resetCurrent();
+      showToast("Pedido atual limpo.");
+    });
+
+    $("#cancelEdit").addEventListener("click", () => {
+      resetCurrent();
+      showToast("Edição cancelada.");
+    });
+
+    $("#saveOrder").addEventListener("click", () => {
+      const items = getCurrentLines();
+      if (!items.length) return;
+      const oldOrder = editingOrderNumber === null
+        ? null
+        : (editingOrderKey ? findOrderByKey(editingOrderKey) : orders.find((order) => order.number === editingOrderNumber));
+      const oldItems = oldOrder ? oldOrder.items : [];
+      const stockError = validateStockChange(oldItems, items);
+
+      if (stockError) {
+        showToast(`${stockError.item.name}: disponíveis ${stockError.available}, precisa de ${stockError.needed}.`);
+        return;
+      }
+
+      const now = new Date();
+      const subtotal = getCurrentSubtotal();
+      const discount = getCurrentDiscount();
+      const deliveryFee = getCurrentDeliveryFee();
+      const order = {
+        _id: oldOrder ? getOrderKey(oldOrder) : `order-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`,
+        number: oldOrder ? oldOrder.number : nextOrderNumber(),
+        customer: $("#customer").value.trim(),
+        notes: oldOrder ? (oldOrder.notes || "") : "",
+        createdAt: oldOrder ? oldOrder.createdAt : now.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }),
+        updatedAt: oldOrder ? now.toLocaleString("pt-BR", { dateStyle: "short", timeStyle: "short" }) : "",
+        status: oldOrder ? (oldOrder.status || "open") : "open",
+        finishedAt: oldOrder ? (oldOrder.finishedAt || "") : "",
+        items,
+        subtotal,
+        discount,
+        deliveryFee,
+        total: getCurrentTotal()
+      };
+
+      applyStockChange(oldItems, items);
+      if (oldOrder) {
+        const oldOrderKey = getOrderKey(oldOrder);
+        orders = orders.map((saved) => getOrderKey(saved) === oldOrderKey ? order : saved);
+      } else {
+        orders.push(order);
+      }
+      persistOrders();
+      resetCurrent();
+      setPage("orders");
+      showToast(oldOrder ? `Pedido #${order.number} atualizado.` : `Pedido #${order.number} salvo.`);
+    });
+
+    document.querySelector(".bottom-nav").addEventListener("click", (event) => {
+      const tab = event.target.closest(".nav-tab[data-page]");
+      if (!tab) return;
+      setPage(tab.dataset.page);
+    });
+
+    function openSideMenu() {
+      $("#sideMenuOverlay").classList.add("open");
+      $("#sideMenuOverlay").setAttribute("aria-hidden", "false");
+    }
+
+    function closeSideMenu() {
+      $("#sideMenuOverlay").classList.remove("open");
+      $("#sideMenuOverlay").setAttribute("aria-hidden", "true");
+    }
+
+    $("#openSideMenu").addEventListener("click", openSideMenu);
+    $("#closeSideMenu").addEventListener("click", closeSideMenu);
+    $("#sideMenuOverlay").addEventListener("click", (event) => {
+      if (event.target === $("#sideMenuOverlay")) {
+        closeSideMenu();
+        return;
+      }
+
+      const pageButton = event.target.closest("[data-side-page]");
+      if (pageButton) {
+        setPage(pageButton.dataset.sidePage);
+        closeSideMenu();
+        return;
+      }
+
+      if (event.target.closest("[data-finance-placeholder]")) {
+        closeSideMenu();
+        showToast("Controle Financeiro será criado depois.");
+      }
+    });
+
+    let swipeStartX = 0;
+    let swipeStartY = 0;
+    let swipeTracking = false;
+    let swipeDragging = false;
+    let swipeDeltaX = 0;
+
+    document.querySelector(".app").addEventListener("touchstart", (event) => {
+      if (event.touches.length !== 1 || shouldIgnoreSwipeTarget(event.target)) {
+        swipeTracking = false;
+        return;
+      }
+
+      swipeTracking = true;
+      swipeDragging = false;
+      swipeDeltaX = 0;
+      swipeStartX = event.touches[0].clientX;
+      swipeStartY = event.touches[0].clientY;
+    }, { passive: true });
+
+    document.querySelector(".app").addEventListener("touchmove", (event) => {
+      if (!swipeTracking || event.touches.length !== 1) return;
+
+      const dx = event.touches[0].clientX - swipeStartX;
+      const dy = event.touches[0].clientY - swipeStartY;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      if (!swipeDragging) {
+        if (absX < 18) return;
+        if (absX < absY * 1.35) {
+          swipeTracking = false;
+          return;
+        }
+        swipeDragging = true;
+        $("#pagesTrack").classList.add("dragging");
+      }
+
+      event.preventDefault();
+      const currentIndex = getPageIndex();
+      const isAtFirst = currentIndex === 0 && dx > 0;
+      const isAtLast = currentIndex === PAGE_ORDER.length - 1 && dx < 0;
+      swipeDeltaX = (isAtFirst || isAtLast) ? dx * .28 : dx;
+      setTrackOffset(swipeDeltaX);
+    }, { passive: false });
+
+    document.querySelector(".app").addEventListener("touchend", (event) => {
+      if (!swipeTracking || !event.changedTouches.length) return;
+      swipeTracking = false;
+      $("#pagesTrack").classList.remove("dragging");
+
+      const dx = swipeDragging ? swipeDeltaX : event.changedTouches[0].clientX - swipeStartX;
+      const dy = event.changedTouches[0].clientY - swipeStartY;
+      const absX = Math.abs(dx);
+      const absY = Math.abs(dy);
+
+      if (absX < 90 || absX < absY * 1.35) {
+        setTrackOffset();
+        return;
+      }
+      movePage(dx < 0 ? 1 : -1);
+    }, { passive: true });
+
+    document.querySelector(".app").addEventListener("touchcancel", () => {
+      swipeTracking = false;
+      swipeDragging = false;
+      $("#pagesTrack").classList.remove("dragging");
+      setTrackOffset();
+    }, { passive: true });
+
+    window.addEventListener("resize", () => {
+      setTrackOffset();
+      updatePagesHeight();
+    });
+
+    // No celular, esconde o menu de baixo (com fade) quando o usuário rola
+    // para baixo, e mostra de novo (com fade) quando rola para cima.
+    (function setupBottomNavAutoHide() {
+      const bottomNav = document.querySelector(".bottom-nav");
+      if (!bottomNav) return;
+
+      let lastScrollY = window.scrollY;
+      let ticking = false;
+
+      function handleScroll() {
+        ticking = false;
+        const isMobile = window.matchMedia("(max-width: 980px)").matches;
+        if (!isMobile) {
+          bottomNav.classList.remove("nav-hidden");
+          lastScrollY = window.scrollY;
+          return;
+        }
+
+        const currentY = window.scrollY;
+        const delta = currentY - lastScrollY;
+
+        if (currentY <= 24) {
+          bottomNav.classList.remove("nav-hidden");
+        } else if (delta > 4) {
+          bottomNav.classList.add("nav-hidden");
+        } else if (delta < -4) {
+          bottomNav.classList.remove("nav-hidden");
+        }
+
+        lastScrollY = currentY;
+      }
+
+      window.addEventListener("scroll", () => {
+        if (ticking) return;
+        ticking = true;
+        requestAnimationFrame(handleScroll);
+      }, { passive: true });
+    })();
+
+    // Garante que nenhuma mudança fique só "na memória": se o celular/aba for
+    // fechado ou minimizado logo após uma ação (ex.: fechar o dia), envia na
+    // hora em vez de esperar o pequeno atraso do salvamento automático.
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") flushOnlineSave();
+    });
+    window.addEventListener("pagehide", flushOnlineSave);
+    window.addEventListener("beforeunload", flushOnlineSave);
+
+    $("#clearDay").addEventListener("click", async () => {
+      if (!hasDayData()) {
+        showToast("Nada para limpar.");
+        return;
+      }
+
+      const ok = await showDayCloseSummary();
+      if (!ok) return;
+
+      const historyRecord = saveDayHistoryRecord();
+      const financeResult = await addDaySalesToFinance({ askOnDuplicate: false, dayRecordId: historyRecord.id });
+      orders = [];
+      clearStoredOrders();
+      resetCurrent();
+      showToast(financeResult.added
+        ? "Dia registrado, venda lançada e novo dia iniciado."
+        : "Dia registrado e novo dia iniciado."
+      );
+    });
+
+    $("#historyList").addEventListener("click", async (event) => {
+      const editButton = event.target.closest("[data-edit-history]");
+      if (editButton) {
+        const record = dayHistory.find((item) => item.id === editButton.dataset.editHistory);
+        if (record) {
+          await restoreHistoryForEditing(record);
+        }
+        return;
+      }
+
+      const button = event.target.closest("[data-delete-history]");
+      if (!button) return;
+
+      const record = dayHistory.find((item) => item.id === button.dataset.deleteHistory);
+      if (!record) return;
+
+      const ok = await showSimpleConfirm(
+        `Excluir o registro do dia ${displayIsoDate(record.date)}?`,
+        "Excluir registro"
+      );
+      if (!ok) return;
+
+      dayHistory = dayHistory.filter((item) => item.id !== record.id);
+      persistDayHistory();
+      renderHistory();
+      $("#reportBox").innerHTML = `<p class="empty">Escolha um período para gerar um relatório.</p>`;
+      showToast("Registro excluído.");
+    });
+
+    $("#reportBox").addEventListener("click", (event) => {
+      const copyButton = event.target.closest("[data-copy-report]");
+      if (copyButton) {
+        const start = currentReportRange.start || "inicio";
+        const end = currentReportRange.end || "hoje";
+        copyTextReport(currentReportRecords, `Relatório da Pastelaria - ${start} até ${end}`);
+        return;
+      }
+
+      const button = event.target.closest("[data-clear-report]");
+      if (!button) return;
+
+      $("#reportBox").innerHTML = `<p class="empty">Escolha um período para gerar um relatório.</p>`;
+      currentReportRecords = [];
+      currentReportRange = { start: "", end: "" };
+      showToast("Relatório removido da tela.");
+    });
+
+    $("#copyHistoryText").addEventListener("click", () => {
+      copyTextReport(dayHistory, "Histórico da Pastelaria");
+    });
+
+    $("#generateReport").addEventListener("click", () => {
+      const start = $("#reportStart").value;
+      const end = $("#reportEnd").value;
+
+      if (start && end && start > end) {
+        showToast("A data inicial não pode ser maior que a final.");
+        return;
+      }
+
+      currentReportRecords = getHistoryInRange(start, end);
+      currentReportRange = { start, end };
+      renderDetailedReport(currentReportRecords, start, end);
+      updatePagesHeight();
+    });
+
+    $("#financePeriods").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-finance-period]");
+      if (!button) return;
+
+      financePeriod = button.dataset.financePeriod;
+      renderFinance();
+      updatePagesHeight();
+    });
+
+    $("#applyFinanceRange").addEventListener("click", () => {
+      const start = $("#financeStart").value;
+      const end = $("#financeEnd").value;
+      if (start && end && start > end) {
+        showToast("A data inicial não pode ser maior que a final.");
+        return;
+      }
+      financeCustomRange = { start, end };
+      financePeriod = "custom";
+      renderFinance();
+      updatePagesHeight();
+    });
+
+    $("#financeEntryFilters").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-finance-entry-filter]");
+      if (!button) return;
+
+      financeEntryFilter = button.dataset.financeEntryFilter;
+      renderFinance();
+      updatePagesHeight();
+    });
+
+    $("#addDaySalesToFinance").addEventListener("click", async () => {
+      const result = await addDaySalesToFinance({ askOnDuplicate: true });
+      if (result.reason === "empty") {
+        showToast("Nenhuma venda no dia para lançar.");
+        return;
+      }
+      if (!result.added) return;
+      financeEntryFilter = "all";
+      renderFinance();
+      updatePagesHeight();
+      showToast("Venda do dia lançada como receita.");
+    });
+
+    $("#financeForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      const type = document.querySelector("input[name='financeType']:checked")?.value || "income";
+      const amount = parseMoneyInput($("#financeAmount").value);
+      const description = $("#financeDescription").value.trim();
+      const date = $("#financeDate").value || todayIsoDate();
+
+      if (!description) {
+        showToast("Informe a descrição.");
+        return;
+      }
+      if (amount <= 0) {
+        showToast("Informe um valor maior que zero.");
+        return;
+      }
+
+      const entry = {
+        id: `finance-${Date.now().toString(36)}`,
+        type,
+        description,
+        amount,
+        date,
+        createdAt: new Date().toISOString()
+      };
+
+      financeState.entries.push(entry);
+      financeState.balance += type === "income" ? amount : -amount;
+      persistFinanceState();
+      $("#financeDescription").value = "";
+      $("#financeAmount").value = "";
+      $("#financeDate").value = todayIsoDate();
+      renderFinance();
+      updatePagesHeight();
+      showToast(type === "income" ? "Receita adicionada." : "Despesa adicionada.");
+    });
+
+    $("#financeBalanceForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      financeState.balance = parseSignedMoneyInput($("#financeManualBalance").value);
+      persistFinanceState();
+      renderFinance();
+      showToast("Saldo atualizado.");
+    });
+
+    $("#financeList").addEventListener("click", async (event) => {
+      const button = event.target.closest("[data-delete-finance]");
+      if (!button) return;
+
+      const entry = financeState.entries.find((item) => item.id === button.dataset.deleteFinance);
+      if (!entry) return;
+
+      const ok = await showSimpleConfirm(`Excluir "${entry.description}"?`, "Excluir lançamento");
+      if (!ok) return;
+
+      if (entry.type === "income") {
+        financeState.balance = Math.max(0, financeState.balance - entry.amount);
+      } else {
+        financeState.balance += entry.amount;
+      }
+      financeState.entries = financeState.entries.filter((item) => item.id !== entry.id);
+      persistFinanceState();
+      renderFinance();
+      updatePagesHeight();
+      showToast("Lançamento excluído.");
+    });
+
+    $("#pixForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+
+      try {
+        const payload = buildPixPayload({
+          key: $("#pixKey").value,
+          name: $("#pixName").value,
+          city: $("#pixCity").value,
+          amount: $("#pixAmount").value
+        });
+        const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=320x320&data=${encodeURIComponent(payload)}`;
+
+        $("#pixPayload").value = payload;
+        $("#pixQr").innerHTML = `<img src="${qrUrl}" alt="QR Code Pix">`;
+        $("#pixResult").classList.remove("hidden");
+        updatePagesHeight();
+        copyText(payload, "Pix gerado e copiado.");
+      } catch (error) {
+        showToast(error.message || "Não foi possível gerar o Pix.");
+      }
+    });
+
+    $("#copyPixPayload").addEventListener("click", () => {
+      const payload = $("#pixPayload").value;
+      if (!payload) {
+        showToast("Gere um Pix primeiro.");
+        return;
+      }
+      copyText(payload, "Pix copiado.");
+    });
+
+    renderAll();
+    startOnlineSync();
+  </script>
+</body>
+</html>
